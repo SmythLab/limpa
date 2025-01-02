@@ -1,0 +1,151 @@
+---
+title: Analyzing mass spectrometry data with limpa
+author: "Mengbo Li and Gordon K. Smyth"
+date: "30 December 2024"
+abstract: >
+  Mass spectrometry is a powerful tool in biomedical research. 
+  Advancements in label-free methods and MS instruments have enabled high-throughput proteomics profiling of biological samples with the increasingly deeper coverage of the proteome, but missing values are still ubiquitous in MS-based proteomics data.
+  Single-cell MS-based proteomics has also started to become available, with increased frequency of missing values.
+  The limpa package implements a pipeline for quantification and differential expression analysis of mass-spectrometry (MS) proteomics data, with probabilistic information recovery from missing values.
+  A key feature is the ability to quantify protein expression without missing values, even for proteins with a single peptide or with a high proportion of missing values.
+  Another key feature is the ability to propagate quantification uncertainty through to the differential expression analysis, preserving power but avoiding false discoveries.
+  limpa produces a linear model object suitable for downstream analysis with the limma package, allowing complex experimental designs and other downstream tasks such as the gene ontology or pathway analysis. 
+  limpa package version: `r packageVersion("limpa")`.
+
+output:
+  BiocStyle::html_document:
+    toc: FALSE
+    number_sections: FALSE
+vignette: >
+  %\VignetteIndexEntry{Analyzing mass spectrometry data with limpa}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  prompt = TRUE,
+  comment = NA
+)
+options(digits=4)
+```
+
+# Quick start
+
+If `y.peptide` is a matrix of peptide-level log2-intensities (including NAs), `protein.id` is a vector of protein IDs, and `design` is a design matrix, then the following code will quantify complete log2-expression for the proteins without missing values and will conduct a differential expression analysis defined by the design matrix.
+```
+library(limpa)
+dpcfit <- dpc(y.peptide)
+y.protein <- dpcQuant(y.peptide, protein.id, dpc=dpcfit)
+fit <- dpcDE(y.protein, design)
+fit <- eBayes(fit)
+topTable(fit)
+```
+
+# Example analysis
+
+Here is a complete reproducible analysis using a small simulated data.
+First, generate the dataset:
+```{r}
+library(limpa)
+set.seed(20241230)
+y.peptide <- simProteinDataSet()
+```
+The dataset is stored as a limma EList object, with components `E` (log2-expression), `genes` (feature annotation) and `targets` (sample annotation).
+The simulation function can generate any number of peptides or proteins but, by default, the dataset has 100 peptides belonging to 25 proteins and the samples are in two groups with $n=5$ replicates in each group.
+About 40% of the expression values are missing.
+
+```{r}
+dim(y.peptide)
+head(y.peptide$genes)
+table(y.peptide$targets$Group)
+mean(is.na(y.peptide$E))
+```
+
+Next we estimate the intercept and slope of the detection probability curve, which relates the probability of detection to the underlying peptide expression level on the logit scale.
+```{r}
+dpcfit <- dpc(y.peptide)
+dpcfit$dpc
+plotDPC(dpcfit)
+```
+
+Then we use the DPC to quantify the protein log2-expression values, using the DPC to represent the missing values.
+There are no longer any missing values, and the samples now cluster into groups:
+```{r}
+y.protein <- dpcQuant(y.peptide, "Protein", dpc=dpcfit)
+plotMDS(y.protein)
+```
+
+Finally, we conduct a differential expression analysis using the limma package.
+The `dpcDE` function calls limma's `voomaLmFit` function, which was specially developed for use with limpa.
+`voomaLmFit` computes precision weights, in a similar way to `voom` for RNA-seq, but instead of using count sizes it use the quantification precisions from `dpcQuant`.
+The plot shows how `dpcDE` predicts the protein-wise variances from the quantification uncertainties and expression levels.
+```{r}
+Group <- factor(y.peptide$targets$Group)
+design <- model.matrix(~Group)
+fit <- dpcDE(y.protein, design, plot=TRUE)
+fit <- eBayes(fit)
+topTable(fit, coef=2)
+```
+This small dataset has five truly DE proteins.
+Four of the give are top-ranked in the DE results.
+The other DE protein is ranked 10th in the DE results and does not achieve statistical significant because it had only 17% detected observations and, hence, a high quantification uncertainty.
+
+```{r}
+sessionInfo()
+```
+
+# Data input
+
+The limpa pipeline starts with a matrix of peptide precursor intensities (rows for peptides and columns for samples) and a character vector of protein IDs.
+The input data can be conveniently supplied as a limma EList object, but a plain matrix is also acceptable.
+limpa includes `readDIANN`, which reads the `Report.tsv` file from DIA-NN software, and the `readSpectronaut`, which reads the `Report.tsv` file from Spectronaut software.
+
+# The detection probability curve
+
+Missing values for some peptides in some samples has complicated the analysis of MS proteomics data.
+Peptides with very low expression values are frequently not detected, but peptides at high expression levels may also be undetected for a variety of reasons that are not completely understood or easily predictable, for example ambiguity of their elution profile with that of other peptides.
+If `y` is the true expression level of a particular peptide in a particular sample (on the log2 scale), then limpa assumes that the probability of detection is given by
+$$P(D | y) = F(\beta_0 + \beta_1 y)$$
+where $D$ indicates detection, $\beta_0$ and $\beta_1$ are the intercept and slope of the DPC and $F$ is the logistic function, given by `plogis` in R.
+This probability relationship is called the detection probability curve (DPC) in limpa.
+The slope $\beta_1$ measures how dependent the missing value process is on the underlying expression level.
+A slope of zero would means completely random missing values, while very large slopes correspond to left censoring.
+The DPC allows limpa to recover information in a probabilistic manner from the missing values.
+The larger the slope, the more information there is to recover.
+We typically find $\beta_1$ values between about 0.7 and 1 to be representative of real MS data.
+
+The DPC is difficult to estimate because `y` is only observed for detected peptides, and the detected values are a biased representation of the complete values that in principle might have been observed had the missing value mechanism not operated.
+limpa uses a mathematical exponential tilting argument to represent the DPC in terms of observed values only, which provides a means to estimate the DPC from real data.
+The DPC slope $\beta_1$ is nevertheless often under-estimated if the variability of each peptide is large.
+
+# Quantification
+
+limpa uses the DPC, together with a Bayesian model, to estimate the expression level of each protein in each sample.
+A multivariate normal prior is estimated empirically from data to describe the variability in log-intensities across the samples and across the peptides.
+The DPC-Quant uses maximum posterior estimation to quantify the expression of each protein in each sample, and also returns the posterior standard error with which each expression value is estimated.
+
+# Differential expression
+
+Finally, limpa passes the protein log2-expression values and associated uncertainties on to the limma package, and uses the `voomaLmFit` function to compute precision weights for each observation.
+`voomaLmFit` uses both protein expression and the quantification standard errors to predict the protein-wise variances and, hence, to construct precision weights for downstream linear modelling.
+This allows the uncertainty associated with missing values imputation to be propagated through to the differential expression analysis.
+The limpa package is fully compatible with limma analysis pipelines, allowing any complex experimental design and other downstream tasks such as the gene ontology or pathway analysis.
+
+# How to get help
+
+Any questions about limpa can be sent to the [Bioconductor support forum](https://support.bioconductor.org).
+
+# How to cite
+
+We are working on a publication that will fully describe the limpa theory and functionality.
+In the meantime, please cite Li & Smyth (2023), which introduced the idea of the detection probability curve (DPC) that is fundamental to the limpa package.
+
+Li M, Smyth GK (2023).
+Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics.
+*Bioinformatics* 39(5), btad200.
+[doi:10.1093/bioinformatics/btad200](https://doi.org/10.1093/bioinformatics/btad200)
+
+# Funding
+
+The limpa project was supported by Chan Zuckerberg Initiative EOSS grant 2021-237445, by Melbourne Research and CSL Translational Data Science Scholarships to ML, and by an NHMRC Investigator Grant to GS.

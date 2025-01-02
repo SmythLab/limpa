@@ -1,0 +1,67 @@
+
+R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(limpa)
+Loading required package: limma
+> options(warnPartialMatchArgs=TRUE,warnPartialMatchAttr=TRUE,warnPartialMatchDollar=TRUE,width=120)
+> 
+> set.seed(0); u <- runif(100)
+> 
+> y.peptide <- simProteinDataSet()
+> names(y.peptide)
+[1] "E"       "genes"   "targets" "other"  
+> colSums(is.na(y.peptide$E))
+ S1  S2  S3  S4  S5  S6  S7  S8  S9 S10 
+ 40  53  45  39  44  42  41  48  38  47 
+> summary(y.peptide$E[,1])
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  2.160   5.695   7.142   6.868   8.587   9.717      40 
+> names(y.peptide)
+[1] "E"       "genes"   "targets" "other"  
+> 
+> dpcfit <- dpc(y.peptide)
+2 peptides are completely missing in all samples.
+> dpcfit$dpc
+     beta0      beta1 
+-4.2779693  0.7787527 
+> 
+> y.protein <- dpcQuant(y.peptide,protein.id="Protein",dpcfit)
+Estimating hyperparameters ...
+Quantifying proteins ...
+Proteins: 25  Peptides: 100 
+> summary(y.protein$E[,1])
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.585   4.252   5.929   5.997   7.828   9.117 
+> 
+> Group <- factor(y.peptide$targets$Group)
+> design <- model.matrix(~Group)
+> fit <- dpcDE(y.protein, design, plot=FALSE)
+> summary(fit$coefficients)
+  (Intercept)        Group2        
+ Min.   :1.646   Min.   :-1.19082  
+ 1st Qu.:3.935   1st Qu.:-0.19335  
+ Median :5.807   Median :-0.08129  
+ Mean   :5.840   Mean   : 0.01622  
+ 3rd Qu.:7.993   3rd Qu.: 0.16885  
+ Max.   :9.398   Max.   : 1.11169  
+> summary(fit$sigma)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.3657  0.8704  0.9754  0.9979  1.1433  1.6495 
+> 
+> proc.time()
+   user  system elapsed 
+   0.26    0.03    0.37 

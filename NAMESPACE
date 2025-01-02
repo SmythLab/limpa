@@ -1,0 +1,30 @@
+#  All functions exported other than those starting with "."
+exportPattern("^[^\\.]")
+
+import(methods)
+importFrom("stats", "binomial", "coef", "contrasts<-", "contr.sum", "dbeta", "dbinom", "dlogis",
+           "glm", "lm.fit", ".lm.fit", "lm.wfit", "model.matrix", "optim", "optimize",
+           "pbeta", "pbinom", "plogis", "qlogis", "quantile", "rbinom", "rnorm", "sd", "var")
+importFrom("graphics", "legend", "lines")
+importFrom("data.table", "fread")
+importFrom("statmod", "gauss.quad.prob", "logmdigamma")
+importFrom("limma", "lmFit", "squeezeVar", "voomaLmFit")
+
+importClassesFrom("limma", "EList", "EListRaw")
+
+S3method(dpcQuant,default)
+S3method(dpcQuant,EList)
+S3method(filterCompoundProteins,default)
+S3method(filterCompoundProteins,EList)
+S3method(filterCompoundProteins,EListRaw)
+S3method(filterNonProteotypicPeptides,default)
+S3method(filterNonProteotypicPeptides,EList)
+S3method(filterNonProteotypicPeptides,EListRaw)
+S3method(filterSingletonPeptides,default)
+S3method(filterSingletonPeptides,EList)
+S3method(filterSingletonPeptides,EListRaw)
+S3method(imputeByExpTilt,default)
+S3method(imputeByExpTilt,EList)
+S3method(imputeByExpTilt,EListRaw)
+S3method(removeNARows,default)
+S3method(removeNARows,EList)

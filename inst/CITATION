@@ -1,0 +1,15 @@
+bibentry(
+	bibtype = "article",
+	author = c(person("Mengbo","Li"),
+	           person(c("Gordon","K"),"Smyth")),
+	title = "Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics",
+	journal = "Bioinformatics",
+	year = 2023,
+	volume = 39,
+	number = 5,
+	pages = "btad200",
+	doi = "10.1093/bioinformatics/btad200",
+
+	textVersion =
+	"Li M, Smyth GK (2023). Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics. Bioinformatics 39(5), btad200."
+)
