@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 
 
-\section{Version 0.9.0 (2025-01-03)}{\itemize{
+\section{Version 0.99.0 (2025-01-03)}{\itemize{
 
 \item
 Initial public release at \url{https://github.com/SmythLab/limpa} with the following exported functions:

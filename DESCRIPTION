@@ -1,5 +1,5 @@
 Package: limpa
-Version: 0.9.0
+Version: 0.99.0
 Date: 2025-01-03
 Title: Linear Models for Proteomics Data
 Description: Quantification and differential analysis of mass-spectrometry proteomics data, with probabilistic recovery of information from missing values. Estimates the detection probability curve (DPC), which relates the probability of successful detection to the underlying expression level of each peptide, and uses it to incorporate peptide missing values into protein quantification and subsequent differential expression analyses. The package produces objects suitable for downstream analysis in limma.
