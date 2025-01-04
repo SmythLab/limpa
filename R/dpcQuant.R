@@ -1,9 +1,9 @@
 dpcQuant <- function(y, ...)
   UseMethod("dpcQuant")
 
-dpcQuant.default <- function(y, protein.id, dpc=NULL, verbose=TRUE, ...)
+dpcQuant.default <- function(y, protein.id, dpc=NULL, dpc.slope=0.8, verbose=TRUE, ...)
 # Use the DPC to quantify protein expression values by maximum posterior.
-# Created 31 Dec 2024. Last modified 31 Dec 2024.
+# Created 31 Dec 2024. Last modified 4 Jan 2025.
 {
 # Check y
   y <- as.matrix(y)
@@ -12,22 +12,22 @@ dpcQuant.default <- function(y, protein.id, dpc=NULL, verbose=TRUE, ...)
   if(missing(protein.id)) stop("Need protein ID")
   if(!identical(nrow(y),length(protein.id))) stop("length(protein.id) must match nrows(y)")
 
-# Check dpc
-  if(is.list(dpc)) dpc <- dpc$dpc
-  if(is.null(dpc)) stop("dpc must be supplied")
-
 # Construct EList and pass to EList method
   z <- new("EList",list(E=y,genes=data.frame(Protein=protein.id)))
-  dpcQuant(z,protein.id=protein.id,dpc=dpc,verbose=verbose,...)
+  dpcQuant(z,protein.id=protein.id,dpc=dpc,dpc.slope=dpc.slope,verbose=verbose,...)
 }
 
-dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, verbose=TRUE, ...)
+dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, dpc.slope=0.8, verbose=TRUE, ...)
 # Use the DPC to quantify protein expression values by maximum posterior.
-# Created 27 Dec 2024. Last modified 31 Dec 2024.
+# Created 27 Dec 2024. Last modified 4 Jan 2024.
 {
 # Check dpc
   if(is.list(dpc)) dpc <- dpc$dpc
-  if(is.null(dpc)) stop("dpc must be supplied")
+  if(is.null(dpc)) {
+    beta0 <- estimateDPCIntercept(y, dpc.slope=dpc.slope)
+    if(verbose) message("DPC intercept estimated as ", formatC(beta0))
+    dpc <- c(beta0=beta0, beta1=dpc.slope)
+  }
 
 # Get vector of protein IDs
 # protein.id can be either an annotation column name or a vector of IDs.

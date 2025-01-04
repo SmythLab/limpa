@@ -9,7 +9,7 @@ Use the DPC to quantify protein expression values.
 }
 
 \usage{
-\method{dpcQuant}{EList}(y, protein.id = "Protein.Group", dpc = NULL, verbose = TRUE, ...)
+\method{dpcQuant}{EList}(y, protein.id = "Protein.Group", dpc = NULL, dpc.slope = 0.8, verbose = TRUE, ...)
 }
 
 \arguments{
@@ -25,6 +25,10 @@ Use the DPC to quantify protein expression values.
     numeric vector giving intercept and slope of DPC.
     Alternatively the output objects from \code{dpc} or \code{dpcCN} are also acceptable.
   }
+  \item{dpc.slope}{
+    slope coefficient of DPC.
+    Only used if \code{dpc} is \code{NULL}.
+  }
   \item{verbose}{
     should progress information be output?
     If \code{TRUE}, then progress information is output every 1000 proteins.
@@ -38,8 +42,10 @@ Use the DPC to quantify protein expression values.
 Implements the DPC-Quant method, which quantifies protein log2-expression values from peptide data.
 The method represents missing values probabilistically using the PDC and returns maximum posterior estimates for all the protein log2-expression values, so that there are no missing values in the final summary.
 
-The \code{dpc} function should be run before running this function.
-The output from this function can be input to \code{dpcDE}.
+The \code{dpc} function is usually used to estimate the detection probability curve (DPC) before running \code{dpcQuant}, however a preset DPC slope can also be used.
+If the \code{dpc} argument is \code{NULL}, then \code{dpc.slope} will be used as the DPC together with a DPC intercept estimated by \code{estimateDPCIntercept}.
+
+The output from \code{dpcQuant} can be input to \code{dpcDE}.
 }
 
 \value{
@@ -66,5 +72,5 @@ PhD Thesis, University of Melbourne.
 
 \examples{
 y.peptide <- simProteinDataSet(n.groups=1,samples.per.group=4,prop.missing=0.2)
-y.protein <- dpcQuant(y.peptide, "Protein", dpc=c(-4,0.7))
+y.protein <- dpcQuant(y.peptide, "Protein", dpc.slope=0.7)
 }
