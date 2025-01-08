@@ -19,7 +19,7 @@ dpcQuant.default <- function(y, protein.id, dpc=NULL, dpc.slope=0.8, verbose=TRU
 
 dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, dpc.slope=0.8, verbose=TRUE, ...)
 # Use the DPC to quantify protein expression values by maximum posterior.
-# Created 27 Dec 2024. Last modified 4 Jan 2024.
+# Created 27 Dec 2024. Last modified 9 Jan 2024.
 {
 # Check dpc
   if(is.list(dpc)) dpc <- dpc$dpc
@@ -63,9 +63,11 @@ dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, dpc.slope=0.
 
 # Add back original original annotation
   d <- !duplicated(protein.id)
-  genes <- y$genes[d,]
-  row.names(genes) <- row.names(y.protein)
-  y.protein$genes <- data.frame(genes,y.protein$genes)
+  if(!is.null(y$genes)) {
+    genes <- y$genes[d,,drop=FALSE]
+    row.names(genes) <- row.names(y.protein)
+    y.protein$genes <- data.frame(genes,y.protein$genes)
+  }
   y.protein$targets <- y$targets
   y.protein$dpc <- dpc
   y.protein
