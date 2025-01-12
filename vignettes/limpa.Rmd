@@ -130,7 +130,12 @@ The DPC-Quant uses maximum posterior estimation to quantify the expression of ea
 Finally, limpa passes the protein log2-expression values and associated uncertainties on to the limma package, and uses the `voomaLmFit` function to compute precision weights for each observation.
 `voomaLmFit` uses both protein expression and the quantification standard errors to predict the protein-wise variances and, hence, to construct precision weights for downstream linear modelling.
 This allows the uncertainty associated with missing values imputation to be propagated through to the differential expression analysis.
+limpa's `dpcDE` function is a convenient wrapper function, passing the appropriate standard errors from `dpcQuant` to `voomaLmFit`.
 The limpa package is fully compatible with limma analysis pipelines, allowing any complex experimental design and other downstream tasks such as the gene ontology or pathway analysis.
+
+The `dpcDE` function accepts any argument that `voomaLmFit` does.
+For example, `dpcDE(y.protein, design, sample.weights=TRUE)` can be used to downweight outlier samples.
+Or `dpc(y.protein, design, block=subject)` could be used to model the correlation between repeated observations on the same subject.
 
 # How to get help
 

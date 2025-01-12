@@ -8,7 +8,12 @@ importFrom("stats", "binomial", "coef", "contrasts<-", "contr.sum", "dbeta", "db
 importFrom("graphics", "legend", "lines")
 importFrom("data.table", "fread")
 importFrom("statmod", "gauss.quad.prob", "logmdigamma")
-importFrom("limma", "lmFit", "squeezeVar", "voomaLmFit")
+importFrom("limma", "squeezeVar")
+
+# Extra imports for voomaLmFitWithImputation
+importFrom("stats", "approxfun", "hat", "lowess")
+importFrom("graphics", "title")
+importFrom("limma", "arrayWeights", "asMatrixWeights", "chooseLowessSpan", "duplicateCorrelation", "loessFit", "lmFit")
 
 importClassesFrom("limma", "EList", "EListRaw")
 
