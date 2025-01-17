@@ -98,8 +98,34 @@ sessionInfo()
 # Data input
 
 The limpa pipeline starts with a matrix of peptide precursor intensities (rows for peptides and columns for samples) and a character vector of protein IDs.
-The input data can be conveniently supplied as a limma EList object, but a plain matrix is also acceptable.
-limpa includes `readDIANN`, which reads the `Report.tsv` file from DIA-NN software, and the `readSpectronaut`, which reads the `Report.tsv` file from Spectronaut software.
+The input data can be conveniently supplied as a limma EList object, but a plain numeric matrix containing the log-intensities is also acceptable.
+Non-detected peptides should be entered as `NA`. 
+
+limpa includes the functions `readDIANN()` and `readSpectronaut()`, which read peptide or peptide-precursor level data output by the popular software tools DIA-NN or Spectronaut respectively.
+For example,
+```{r, eval = FALSE}
+y.peptide <- readDIANN("Report.tsv")
+```
+reads the `Report.tsv` file written by DIA-NN from the current working directory.
+
+After reading in the data, it is common to filter out non-proteotypic peptides by
+```{r, eval = FALSE}
+y.peptide <- filterNonProteotypicPeptides(y.peptide)
+```
+and to filter out compound protein groups (protein groups mapped to two or more protein IDs) by
+```{r, eval = FALSE}
+y.peptide <- filterCompoundProteins(y.peptide)
+```
+These filtering steps are not required by limpa but help with downstream interpretation of the results.
+
+Protein groups can also be filtered by number of peptides, typically to remove proteins with only one detected precursor:
+```{r, eval = FALSE}
+y.peptide <- filterSingletonPeptides(y.peptide, min.n.peptides = 2)
+```
+This step is entirely optional.
+We generally recommend that users keep all proteins in order to retain maximum information.
+The `dpcQuant()` function will still quantify complete data even for proteins with just one peptide.
+
 
 # The detection probability curve
 
@@ -130,10 +156,10 @@ The DPC-Quant uses maximum posterior estimation to quantify the expression of ea
 Finally, limpa passes the protein log2-expression values and associated uncertainties on to the limma package, and uses the `voomaLmFit` function to compute precision weights for each observation.
 `voomaLmFit` uses both protein expression and the quantification standard errors to predict the protein-wise variances and, hence, to construct precision weights for downstream linear modelling.
 This allows the uncertainty associated with missing values imputation to be propagated through to the differential expression analysis.
-limpa's `dpcDE` function is a convenient wrapper function, passing the appropriate standard errors from `dpcQuant` to `voomaLmFit`.
+limpa's `dpcDE` function is a wrapper function, passing the appropriate standard errors from `dpcQuant` to `voomaLmFit`.
 The limpa package is fully compatible with limma analysis pipelines, allowing any complex experimental design and other downstream tasks such as the gene ontology or pathway analysis.
 
-The `dpcDE` function accepts any argument that `voomaLmFit` does.
+The `dpcDE()` function accepts any argument that `voomaLmFit` does.
 For example, `dpcDE(y.protein, design, sample.weights=TRUE)` can be used to downweight outlier samples.
 Or `dpc(y.protein, design, block=subject)` could be used to model the correlation between repeated observations on the same subject.
 

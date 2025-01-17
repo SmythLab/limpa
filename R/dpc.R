@@ -6,7 +6,9 @@ dpc <- function(y, maxit = 100, eps = 1e-4, b1.upper = 1)
 {
   
   y <- as.matrix(y)
-  dp <- rowMeans(!is.na(y))
+  narrays <- ncol(y)
+  n.detected <- rowSums(!is.na(y))
+  dp <- n.detected / narrays
   
   # Check input
   if (identical(min(dp),0) ) {
@@ -73,7 +75,8 @@ dpc <- function(y, maxit = 100, eps = 1e-4, b1.upper = 1)
   list(dpc = betas, 
        history = info,
        dpc.start = betaStart,
-       prop.detected = dp,
+       n.detected = n.detected,
+       nsamples = narrays, 
        mu.prior = hp$mu0,
        n.prior = hp$n0,
        df.prior = hp$df.prior,

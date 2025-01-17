@@ -104,6 +104,8 @@ dpcCN <- function(y, dpc.start=c(-4,0.7), iterations=3L, verbose=TRUE)
   out$dpc <- c(beta0=beta0,beta1=beta1)
   out$mu <- mu
   out$sigma <- sigma
+  out$n.detected <- rowSums(!is.na(y))
+  out$nsamples <- nsamples
   out
 }
 

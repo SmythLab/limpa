@@ -21,7 +21,7 @@ filterNonProteotypicPeptides.default <- function(y, proteotypic, ...)
 filterNonProteotypicPeptides.EList <- filterNonProteotypicPeptides.EListRaw <- function(y, proteotypic="Proteotypic", ...)
 # Remove peptides that are not proteotypic.
 # Method for EList and EListRaw objects.
-# Created 11 Sep 2023. Last modified 26 Dec 2024.
+# Created 11 Sep 2023. Last modified 15 Jan 2025.
 {
   # Get proteotypic vector
   proteotypic <- as.character(proteotypic)
@@ -29,9 +29,11 @@ filterNonProteotypicPeptides.EList <- filterNonProteotypicPeptides.EListRaw <- f
     ColName <- proteotypic
     proteotypic <- y$genes[[ColName]]
     if(is.null(proteotypic)) stop("Column \"",ColName,"\" not found in y$genes")
+    ind.rm <- which(colnames(y$genes) == ColName)
   } else {
     if(!identical(nrow(y),length(proteotypic))) stop("length(proteotypic) must match nrows(y) or be of length 1 as the column name for proteotypicity!")
     y$genes$proteotypic <- proteotypic
+    ind.rm <- which(colnames(y$genes) == "proteotypic")
   }
 
   # Check for NAs
@@ -42,6 +44,7 @@ filterNonProteotypicPeptides.EList <- filterNonProteotypicPeptides.EListRaw <- f
   if(is.factor(proteotypic)) proteotypic <- as.integer(as.character(proteotypic))
   if(length(unique(proteotypic)) > 2L) stop("proteotypic should contain only 0/1 or TRUE/FALSE values")
 
+  y$genes <- y$genes[, -ind.rm, drop = FALSE]
   # Filter
   y[as.logical(proteotypic),,drop=FALSE]
 }

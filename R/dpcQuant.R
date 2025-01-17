@@ -64,7 +64,16 @@ dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, dpc.slope=0.
 # Add back original original annotation
   d <- !duplicated(protein.id)
   if(!is.null(y$genes)) {
-    genes <- y$genes[d,,drop=FALSE]
+    # remove duplicated columns
+    extra_anno <- which(!(colnames(y$genes) %in% colnames(y.protein$genes)))
+    genes <- y$genes[, extra_anno, drop = FALSE]
+    # remove precursor-level columns
+    dup_protein.id <- duplicated(protein.id)
+    kp_cols <- vapply(seq_len(ncol(genes)), function(ii) {
+      dup_ii <- duplicated(genes[, ii])
+      all(dup_ii[dup_protein.id])
+    }, logical(1L))
+    genes <- genes[d, kp_cols, drop = FALSE]
     row.names(genes) <- row.names(y.protein)
     y.protein$genes <- data.frame(genes,y.protein$genes)
   }

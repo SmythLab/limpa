@@ -7,7 +7,7 @@ Plot the detection probability curve using output from the \code{dpc} function.
 }
 
 \usage{
-plotDPC(dpcfit, add.jitter = TRUE, jitter.amount = NULL,
+plotDPC(dpcfit, add.jitter = TRUE, 
         point.cex = 0.2, lwd = 2, ylim = c(0, 1),
         main = "Detection probability curve", \dots)
 }
@@ -15,7 +15,6 @@ plotDPC(dpcfit, add.jitter = TRUE, jitter.amount = NULL,
 \arguments{
   \item{dpcfit}{object produced by \code{dpc()}.}
   \item{add.jitter}{logical, whether to add jitter to the detected proportion axis.}
-  \item{jitter.amount}{amount of jittering.}
   \item{point.cex}{relative size of points.}
   \item{lwd}{relative line width.}
   \item{ylim}{limits of the y-axis.}
