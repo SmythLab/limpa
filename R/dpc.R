@@ -8,16 +8,16 @@ dpc <- function(y, maxit = 100, eps = 1e-4, b1.upper = 1)
   y <- as.matrix(y)
   narrays <- ncol(y)
   n.detected <- rowSums(!is.na(y))
-  dp <- n.detected / narrays
-  
+
   # Check input
-  if (identical(min(dp),0) ) {
-    message(sum(dp == 0), " peptides are completely missing in all samples.")
-    y <- y[dp > 0, ]
-    dp <- dp[dp > 0]
+  if (identical(min(n.detected),0)) {
+    message(sum(n.detected == 0), " peptides are completely missing in all samples.")
+    y <- y[n.detected > 0.5, ]
+    n.detected <- n.detected[n.detected > 0.5]
   }
 
-  wt <- rep_len(ncol(y), nrow(y))
+  dp <- n.detected / narrays
+  wt <- rep_len(narrays, nrow(y))
   
   # Get hyperparamters
   hp <- .dpcHyperparam(y)
