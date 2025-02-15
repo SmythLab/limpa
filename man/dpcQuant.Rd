@@ -9,7 +9,8 @@ Use the DPC to quantify protein expression values.
 }
 
 \usage{
-\method{dpcQuant}{EList}(y, protein.id = "Protein.Group", dpc = NULL, dpc.slope = 0.8, verbose = TRUE, ...)
+\method{dpcQuant}{EList}(y, protein.id = "Protein.Group", dpc = NULL, dpc.slope = 0.8,
+     verbose = TRUE, ...)
 }
 
 \arguments{

@@ -7,7 +7,8 @@ Estimate hyperparameters for the DPC-based protein quantification method (DPC-Qu
 }
 
 \usage{
-dpcQuantHyperparam(y, protein.id, dpc.slope = 0.7, sd.quantile.for.logFC = 0.9, robust = FALSE, ...)
+dpcQuantHyperparam(y, protein.id, dpc.slope = 0.7,
+     sd.quantile.for.logFC = 0.9, robust = FALSE, ...)
 }
 
 \arguments{

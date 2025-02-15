@@ -5,7 +5,8 @@
 Simulate peptide-level log2-expression values from a mass spectrometry experiment.
 }
 \usage{
-simProteinDataSet(n.peptides = 100, n.groups = 2, samples.per.group = 5, peptides.per.protein = 4,
+simProteinDataSet(n.peptides = 100,
+     n.groups = 2, samples.per.group = 5, peptides.per.protein = 4, 
      mu.range = c(2,10), sigma = 0.4, prop.de = 0.2, fc = 2,
      dpc.intercept = NULL, dpc.slope = 0.7, prop.missing = 0.4)
 }

@@ -10,11 +10,11 @@ Equivalent to calling vooma(), arrayWeights(), duplicateCorrelation() and lmFit(
 }
 
 \usage{
-voomaLmFitWithImputation(y, design = NULL, prior.weights = NULL, imputed = NULL,
-           block = NULL,
-           sample.weights = FALSE, var.design = NULL, var.group = NULL, prior.n = 10,
-           predictor = NULL, span = NULL, legacy.span = FALSE,
-           plot = FALSE, save.plot = FALSE, keep.EList = TRUE)
+voomaLmFitWithImputation(y, design = NULL,
+     prior.weights = NULL, imputed = NULL, block = NULL,
+     sample.weights = FALSE, var.design = NULL, var.group = NULL, prior.n = 10,
+     predictor = NULL, span = NULL, legacy.span = FALSE,
+     plot = FALSE, save.plot = FALSE, keep.EList = TRUE)
 }
 
 \arguments{
@@ -81,20 +81,29 @@ voomaLmFitWithImputation(y, design = NULL, prior.weights = NULL, imputed = NULL,
 }
 
 \details{
-This function is analogous to \code{voomLmFit} in the edgeR package but for microarray-like data with continuous log-expression values.
-The function is equivalent to calling \code{vooma()} followed by \code{lmFit()}, optionally with \code{arrayWeights()} and \code{duplicateCorrelation()} as well to estimate sample weights and block correlation.
+This function is a modification of \code{voomaLmFit} in the limma package, to give special treatment to imputed values.
+This function gives more accurate estimation of the row-wise variances because it discounts fitted values and associated residuals that are determined entirely by imputed values that are all identical.
+In a regular limma pipeline, such residuals will be structurally zero and will cause underestimation of the residual variance for that gene.
+In \code{voomaLmFit}, such residuals do not contribute to the genewise variances and the genewise residual degrees of freedom (df) are correspondingly reduced.
+The principle is the same as for Lun & Smyth (2017), but here the loss of df is from imputed values instead of from zero counts.
+
+This function is analogous to \code{voomLmFit} in the edgeR package but for continuous log-expression values instead of count data.
+\code{voomLmFit} is a refinement of \code{voom} adjusting for loss of residual df from all zero groups, whereas \code{voomaLmFitWithImputation} is a refinement of \code{voomaLmFit} adjusting for loss of residual df from all imputed groups.
+The results from \code{voomaLmFitWithImputation} are similar to those from \code{voomaLmFit}, but the \code{df.residual} values are equal or smaller and the \code{sigma} values are equal or larger.
+
+\code{voomaLmFitWithImputation} is similar to calling \code{vooma()} followed by \code{lmFit()}, optionally with \code{arrayWeights()} and \code{duplicateCorrelation()} to estimate sample weights and block correlation.
 The function finishes with \code{lmFit()} and returns a fitted model object.
 
 Like \code{vooma}, \code{voomaLmFitWithImputation} estimates the mean-variance relationship in the data and uses it to compute appropriate precision weights for each observation.
 The mean-variance trend is estimated from gene-level data but is extrapolated back to individual observations to obtain a precision weight (inverse variance) for each observation.
 The weights are then used by \code{lmFit()} to adjust for heteroscedasticity.
 
-Like \code{voomLmFit}, which corrects for loss of residual degrees of freedom due to entirely zero counts in a group (Lun & Smyth 2017), \code{voomaLmFitWithImputation} corrects for loss of residual degrees of freedom due to entirely imputed values in a group (L.
+Like \code{voomLmFit}, which corrects for loss of residual degrees of freedom due to entirely zero counts in a group (Lun & Smyth 2017), \code{voomaLmFitWithImputation} corrects for loss of residual degrees of freedom due to entirely imputed values in a group.
 This adjustment prevents from the residual standard deviations from being underestimated due to zero variance between identical imputed values in a group.
 
 If \code{span=NULL}, then an optimal span value is estimated depending on \code{nrow(y)}.
 The span is chosen by \code{chooseLowessSpan} with \code{n=nrow(y)}, \code{small.n=50}, \code{min.span=0.3} and \code{power=1/3}.
-If \code{legacy.span=TRUE}, then the \code{chooseLowessSpan} arguments are reset to \code{small.n=10}, \code{min.span=0.3} and \code{power=0.5} to match the settings used by \code{vooma} in limma version 3.59.1 and earlier.
+If \code{legacy.span = TRUE}, then the \code{chooseLowessSpan} arguments are reset to \code{small.n=10}, \code{min.span=0.3} and \code{power = 0.5} to match the settings used by \code{vooma} in limma version 3.59.1 and earlier.
 
 If \code{predictor} is not \code{NULL}, then the variance trend is modeled as a function of both the mean log-expression and the \code{predictor} using a multiple linear regression with the two predictors.
 In this case, the \code{predictor} is assumed to be some prior predictor of the precision or standard deviation of each log-expression value.

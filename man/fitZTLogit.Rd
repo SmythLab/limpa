@@ -4,7 +4,8 @@
 \description{Estimate a logistic regression, with optionally capped probabilities, by maximum likelihood with zero-truncated data.}
 
 \usage{
-fitZTLogit(n.successes, n.trials, X = NULL, capped = FALSE, beta.start = NULL, alpha.start = 0.95)
+fitZTLogit(n.successes, n.trials, X = NULL, capped = FALSE,
+     beta.start = NULL, alpha.start = 0.95)
 }
 
 \arguments{

@@ -23,7 +23,7 @@ plotProtein(y, protein, col = "black", cex = 2, lwd = 2, ...)
 }
 
 \details{
-Plot the sample-wise protein quantification results from \code{dpcQuant()} for each protein. 
+Plot the sample-wise protein quantification results from \code{dpcQuant()} for a specified protein. 
 The error bars (standard errors) indicate the quantification uncertainty associated with each estimate. 
 Typically within a dataset, the larger the error bar is, the more missing values there are in the 
 precursor/peptide-level data for that protein. 
@@ -31,6 +31,7 @@ precursor/peptide-level data for that protein.
 
 \value{
 A plot is created on the current graphics device.
+A list with components \code{y} and \code{se} is also invisibly returned.
 }
 
 \references{
@@ -44,4 +45,5 @@ PhD Thesis, University of Melbourne.
 y.peptide <- simProteinDataSet()
 y.protein <- dpcQuant(y.peptide, "Protein", dpc=c(-4,0.7))
 plotProtein(y.protein, protein = "Protein01", col = rep(c("blue", "red"), each = 5))
+y.protein$other$standard.error["Protein01",]
 }
