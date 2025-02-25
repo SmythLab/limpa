@@ -1,5 +1,6 @@
 \name{dpcQuantHyperparam}
 \alias{dpcQuantHyperparam}
+\alias{dpcImputeHyperparam}
 \title{Estimate Hyperparameters for DPC-Quant}
 
 \description{
@@ -8,6 +9,8 @@ Estimate hyperparameters for the DPC-based protein quantification method (DPC-Qu
 
 \usage{
 dpcQuantHyperparam(y, protein.id, dpc.slope = 0.7,
+     sd.quantile.for.logFC = 0.9, robust = FALSE, ...)
+dpcImputeHyperparam(y, dpc.slope = 0.7,
      sd.quantile.for.logFC = 0.9, robust = FALSE, ...)
 }
 
@@ -37,7 +40,7 @@ dpcQuantHyperparam(y, protein.id, dpc.slope = 0.7,
 
 \details{
 Estimates and returns the empirical Bayes hyperparameters required for DPC-Quant protein quantification. 
-This function is called by the \code{dpcQuant} function. 
+\code{dpcQuantHyperparam} is called by \code{dpcQuant} function, and \code{dpcImputeHyperparam} is called by \code{dpcImpute}. 
 }
 
 \value{
@@ -57,6 +60,7 @@ A list with components
     protein standard deviations from additive model fitted to peptide log expression values.
     Numeric vector of same length as \code{unique(protein.id))}.
   }
+  The last component is omitted in the \code{dpcImputeHyperparam} output.
 }
 
 \references{
