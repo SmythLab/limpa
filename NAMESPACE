@@ -15,6 +15,7 @@ importFrom("stats", "approxfun", "hat", "lowess")
 importFrom("graphics", "title")
 importFrom("limma", "arrayWeights", "asMatrixWeights", "chooseLowessSpan", "duplicateCorrelation",
            "loessFit", "lmFit")
+importFrom("arrow", "read_parquet")
 
 importClassesFrom("limma", "EList", "EListRaw")
 

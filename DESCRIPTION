@@ -13,7 +13,8 @@ Authors@R: c(person("Mengbo", "Li",
   comment = c(ORCID = "0000-0001-9221-2892")))
 License: GPL (>=2)
 Depends: limma
-Imports: methods, stats, data.table, statmod
+Imports: methods, stats, data.table, statmod, arrow
 Suggests: knitr, BiocStyle
 VignetteBuilder: knitr
 biocViews: Bayesian, BiologicalQuestion, DataImport, DifferentialExpression, GeneExpression, MassSpectrometry, Preprocessing, Proteomics, Regression, Software
+RoxygenNote: 7.3.2

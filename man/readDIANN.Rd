@@ -6,13 +6,14 @@ Read DIA-NN Reports.tsv file into EList object.
 }
 
 \usage{
-readDIANN(file = "Report.tsv", path = NULL, sep = "\t", log = TRUE,
+readDIANN(file = "Report.tsv", path = NULL, format="tsv", sep = "\t", log = TRUE,
         q.columns = c("Global.Q.Value", "Lib.Q.Value"), q.cutoffs = c(0.01, 0.01))
 }
 
 \arguments{
   \item{file}{the name of the file from which the data are to be read.}
   \item{path}{character string giving the directory containing the file. Defaults to the current working directory.}
+  \item{format}{character string giving the format of the file. Possible values are "tsv" or "parquet". Default is "tsv". }
   \item{sep}{the field separator character}
   \item{log}{logical. If \code{TRUE} then intensities will be returned on the log2 scale, otherwise unlogged with zeros.}
   \item{q.columns}{column headings in the DIA-NN output containing Q-values for peptide identification. Character vector.}

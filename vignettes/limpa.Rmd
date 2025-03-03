@@ -108,6 +108,25 @@ y.peptide <- readDIANN("Report.tsv")
 ```
 reads the `Report.tsv` file written by DIA-NN from the current working directory.
 
+We are aware that DIA-NN no longer exports its main report in the `.tsv` format, but in the `.parquet` instead from version 2.0. 
+To read in the `.parquet ` output, use
+
+```{r, eval = FALSE}
+y.peptide <- readDIANN("Report.parquet", format = "p")
+```
+
+For data searched with match-between-run (MBR), as suggested by Thierry Nordmann (Max Planck Institute of Biochemistry), we recommend to filter the observations by the following
+
+```{r, eval = FALSE}
+y.peptide <- readDIANN("report.tsv", q.columns = c("Q.Value", "Lib.Q.Value", "Lib.PG.Q.Value"), q.cutoffs = 0.01)
+```
+
+If without MBR, we recommend
+
+```{r, eval = FALSE}
+y.peptide <- readDIANN("report.tsv", q.columns = c("Q.Value", "Global.Q.Value", "lobal.PG.Q.Value"), q.cutoffs = 0.01)
+```
+
 After reading in the data, it is common to filter out non-proteotypic peptides by
 ```{r, eval = FALSE}
 y.peptide <- filterNonProteotypicPeptides(y.peptide)

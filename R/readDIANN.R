@@ -1,13 +1,23 @@
-readDIANN <- function(file="Report.tsv", path=NULL, sep="\t", log=TRUE, q.columns = c("Global.Q.Value", "Lib.Q.Value"), q.cutoffs = c(0.01, 0.01))
-# Read Report.tsv from DIA-NN output
-# Gordon Smyth and Mengbo Li
-# Created 3 July 2023. Last modified 23 May 2024.
+readDIANN <- function(file="Report.tsv", path=NULL, format="tsv", sep="\t", log=TRUE, q.columns = c("Global.Q.Value", "Lib.Q.Value"), q.cutoffs = c(0.01, 0.01))
+  # Read Report.tsv from DIA-NN output
+  # Gordon Smyth and Mengbo Li
+  # Created 3 July 2023. Last modified 3 March 2025.
 {
   # Read DIA-NN report file
   if (!is.null(path)) file <- file.path(path, file)
+  
+  format <- match.arg(format, choices = c("tsv", "parquet"))
   Select <- c("Run", "Protein.Group", "Protein.Names", "Genes", "Precursor.Id", "Proteotypic", "Precursor.Normalised", q.columns)
-  Report <- fread(file, sep = "\t", select = Select)
-
+  
+  if (identical(format, "tsv")) {
+    Report <- fread(file, sep = "\t", select = Select)
+  }
+  
+  if (identical(format, "parquet")) {
+    Report <- arrow::read_parquet(file)
+    Report <- as.data.frame(Report[, Select])
+  }
+  
   # Filter by q-values
   if (length(q.columns) > 0L) {
     if (!identical(length(q.cutoffs), length(q.columns))) {
@@ -20,7 +30,7 @@ readDIANN <- function(file="Report.tsv", path=NULL, sep="\t", log=TRUE, q.column
     }
     Report <- Report[kp, ]
   }
-
+  
   # Convert intensities to wide format
   Samples <- unique(Report$Run)
   Precursors <- unique(Report$Precursor.Id)
@@ -31,12 +41,12 @@ readDIANN <- function(file="Report.tsv", path=NULL, sep="\t", log=TRUE, q.column
   y[i] <- Report$Precursor.Normalised
   colnames(y) <- Samples
   rownames(y) <- Precursors
-
+  
   # Precursor annotation in wide format
   d <- duplicated(Report$Precursor.Id)
   Genes <- data.frame(Report[!d, 2:6])
   row.names(Genes) <- Precursors
-
+  
   # Output either unlogged EListRaw (with zeros) or logged Elist (with NAs)
   if (log) {
     y[y < 1e-8] <- NA
