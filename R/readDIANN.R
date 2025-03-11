@@ -1,19 +1,21 @@
-readDIANN <- function(file="Report.tsv", path=NULL, format="tsv", sep="\t", log=TRUE, q.columns = c("Global.Q.Value", "Lib.Q.Value"), q.cutoffs = c(0.01, 0.01))
+readDIANN <- function(file="Report.tsv", path=NULL, format = "tsv", sep="\t", log=TRUE, q.columns = c("Global.Q.Value", "Lib.Q.Value"), q.cutoffs = c(0.01, 0.01))
   # Read Report.tsv from DIA-NN output
   # Gordon Smyth and Mengbo Li
   # Created 3 July 2023. Last modified 3 March 2025.
 {
   # Read DIA-NN report file
   if (!is.null(path)) file <- file.path(path, file)
-  
-  format <- match.arg(format, choices = c("tsv", "parquet"))
   Select <- c("Run", "Protein.Group", "Protein.Names", "Genes", "Precursor.Id", "Proteotypic", "Precursor.Normalised", q.columns)
-  
+  format <- match.arg(format, choices = c("tsv", "parquet"))
+
   if (identical(format, "tsv")) {
     Report <- fread(file, sep = "\t", select = Select)
   }
   
+  #	Use arrow package for reading
   if (identical(format, "parquet")) {
+    suppressPackageStartupMessages(OK <- requireNamespace("arrow",quietly = TRUE))
+	  if(!OK) stop("arrow package required but is not installed (or can't be loaded)")
     Report <- arrow::read_parquet(file)
     Report <- as.data.frame(Report[, Select])
   }

@@ -42,7 +42,7 @@ Loading required package: limma
 > y.protein <- dpcQuant(y.peptide,protein.id="Protein",dpcfit)
 Estimating hyperparameters ...
 Quantifying proteins ...
-Proteins: 25  Peptides: 100 
+Proteins: 25 Peptides: 100
 > summary(y.protein$E[,1])
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   2.585   4.252   5.929   5.997   7.828   9.117 
@@ -53,15 +53,15 @@ Proteins: 25  Peptides: 100
 > summary(fit$coefficients)
   (Intercept)        Group2        
  Min.   :1.646   Min.   :-1.19082  
- 1st Qu.:3.935   1st Qu.:-0.19335  
+ 1st Qu.:3.935   1st Qu.:-0.19334  
  Median :5.807   Median :-0.08129  
- Mean   :5.840   Mean   : 0.01622  
- 3rd Qu.:7.993   3rd Qu.: 0.16885  
+ Mean   :5.840   Mean   : 0.01623  
+ 3rd Qu.:7.993   3rd Qu.: 0.16886  
  Max.   :9.398   Max.   : 1.11169  
 > summary(fit$sigma)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.3657  0.8704  0.9754  0.9979  1.1433  1.6495 
+ 0.3656  0.8701  0.9755  0.9979  1.1433  1.6496 
 > 
 > proc.time()
    user  system elapsed 
-   0.26    0.03    0.37 
+   0.26    0.14    0.37 

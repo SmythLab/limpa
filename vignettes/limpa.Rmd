@@ -1,7 +1,7 @@
 ---
 title: Analyzing mass spectrometry data with limpa
 author: "Mengbo Li and Gordon K. Smyth"
-date: "First version 30 December 2024, Last revised 17 January 2025"
+date: "First version 30 December 2024, Last revised 3 March 2025"
 abstract: >
   Mass spectrometry is a powerful tool in biomedical research. 
   Advancements in label-free methods and MS instruments have enabled high-throughput proteomics profiling of biological samples with the increasingly deeper coverage of the proteome, but missing values are still ubiquitous in MS-based proteomics data.
@@ -108,8 +108,8 @@ y.peptide <- readDIANN("Report.tsv")
 ```
 reads the `Report.tsv` file written by DIA-NN from the current working directory.
 
-We are aware that DIA-NN no longer exports its main report in the `.tsv` format, but in the `.parquet` instead from version 2.0. 
-To read in the `.parquet ` output, use
+We are aware that DIA-NN no longer exports its main report in the `.tsv` format, but in the `.parquet` format from version 2.0. 
+To process DIA-NN data in the `.parquet` format, use
 
 ```{r, eval = FALSE}
 y.peptide <- readDIANN("Report.parquet", format = "p")

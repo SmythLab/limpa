@@ -97,7 +97,7 @@ imputeByExpTilt.EListRaw <- function(y, ...)
 
 expTiltByRows <- function(y, dpc.slope=0.7, sigma.obs=NULL)
 # Exponential tilting applied to rows
-# Created 30 Oct 2023. Last modified 23 May 2024.
+# Created 30 Oct 2023. Last modified 11 Mar 2025.
 {
 # Check input
   NRows <- nrow(y)
@@ -130,6 +130,7 @@ expTiltByRows <- function(y, dpc.slope=0.7, sigma.obs=NULL)
   mumis <- m - dpc.slope * sigma2.obs
 
 # Prediction variance
+  sigma2.obs <- pmax(sigma2.obs,0.001)
   predvar <- (nobs+1)/nobs * sigma2.obs + 2/degfree * (dpc.slope * sigma2.obs)^2
 
   list(mu.missing=mumis,prediction.variance=predvar,n.missing=nmis)
@@ -137,7 +138,7 @@ expTiltByRows <- function(y, dpc.slope=0.7, sigma.obs=NULL)
 
 expTiltByColumns <- function(y, dpc.slope=0.7)
 # Exponential tilting applied to columns
-# Created 30 Oct 2023. Last modified 23 May 2024.
+# Created 30 Oct 2023. Last modified 11 Mar 2025.
 {
 # Check input
   NRows <- nrow(y)
@@ -147,12 +148,26 @@ expTiltByColumns <- function(y, dpc.slope=0.7)
   nmis <- colSums(is.na(y))
   nobs <- NRows - nmis
 
+# If no columnwise variances, return NAs
+  if(max(nobs) < 1.5) {
+    mumis <- predvar <- rep_len(NA,NSamples)
+    return(list(mu.missing=mumis,prediction.variance=predvar,n.missing=nmis))
+  }
+
 # Column means
   m <- colMeans(y,na.rm=TRUE)
 
 # Standard deviation between rows
-  degfree <- nobs-1L
+  degfree <- pmax(nobs-1L,0L)
   sigma2.obs <- rowSums((t(y)-m)^2,na.rm=TRUE)/degfree
+  sigma2.obs <- pmax(sigma2.obs, 0.1)
+
+# Using pooling for small degfree
+  if(min(degfree) < 5) {
+    j <- (degfree < 5)
+    sigma2.obs[j] <- quantile(sigma2.obs,0.75,na.rm=TRUE)
+    degfree[j] <- max(degfree)
+  }
 
 # Columnwise values for mu_mis
   mumis <- m - dpc.slope * sigma2.obs

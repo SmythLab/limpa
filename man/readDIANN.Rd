@@ -6,14 +6,14 @@ Read DIA-NN Reports.tsv file into EList object.
 }
 
 \usage{
-readDIANN(file = "Report.tsv", path = NULL, format="tsv", sep = "\t", log = TRUE,
+readDIANN(file = "Report.tsv", path = NULL, format = "tsv", sep = "\t", log = TRUE,
         q.columns = c("Global.Q.Value", "Lib.Q.Value"), q.cutoffs = c(0.01, 0.01))
 }
 
 \arguments{
-  \item{file}{the name of the file from which the data are to be read.}
+  \item{file}{the name of the file from which the data are to be read. Or it can also be the data.frame read from the report in the long format, where each row is an observation.}
   \item{path}{character string giving the directory containing the file. Defaults to the current working directory.}
-  \item{format}{character string giving the format of the file. Possible values are "tsv" or "parquet". Default is "tsv". }
+  \item{format}{character string giving the format of the file. Possible values are "tsv" or "parquet". Default is "tsv".}
   \item{sep}{the field separator character}
   \item{log}{logical. If \code{TRUE} then intensities will be returned on the log2 scale, otherwise unlogged with zeros.}
   \item{q.columns}{column headings in the DIA-NN output containing Q-values for peptide identification. Character vector.}
@@ -23,6 +23,8 @@ readDIANN(file = "Report.tsv", path = NULL, format="tsv", sep = "\t", log = TRUE
 \details{
 DIA-NN (Demichev et al 2020) writes a file in long (data.frame) format, typically called \code{Report.tsv}, containing normalized intensities for peptide precursors.
 \code{readDIANN} reads this file and produces an object in limma EList or EListRaw format.
+From version 2.0, DIA-NN returns the main report in Apache Parquet format (\url{https://github.com/vdemichev/DiaNN/releases}). 
+\code{readDIANN} can read the Parquet file directly or, alternatively, one can read the Parquet file into a data.frame, and use \code{readDIANN} to process the long-format data.frame into a limma EList or EListRaw object. 
 }
 
 \value{

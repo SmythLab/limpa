@@ -1,6 +1,6 @@
 Package: limpa
-Version: 0.99.5
-Date: 2025-02-25
+Version: 0.99.6
+Date: 2025-03-11
 Title: Quantification and Differential Analysis of Proteomics Data
 Description: Quantification and differential analysis of mass-spectrometry proteomics data, with probabilistic recovery of information from missing values. Estimates the detection probability curve (DPC), which relates the probability of successful detection to the underlying expression level of each peptide, and uses it to incorporate peptide missing values into protein quantification and into subsequent differential expression analyses. The package produces objects suitable for downstream analysis in limma. The package accepts peptide-level data with missing values and produces complete protein quantifications without missing values. The uncertainty introduced by missing value imputation is propagated through to the limma analyses using variance modeling and precision weights. The package name "limpa" is an acronym for "Linear Models for Proteomics Data".
 Authors@R: c(person("Mengbo", "Li",
@@ -13,8 +13,7 @@ Authors@R: c(person("Mengbo", "Li",
   comment = c(ORCID = "0000-0001-9221-2892")))
 License: GPL (>=2)
 Depends: limma
-Imports: methods, stats, data.table, statmod, arrow
-Suggests: knitr, BiocStyle
+Imports: methods, stats, data.table, statmod
+Suggests: knitr, BiocStyle, arrow
 VignetteBuilder: knitr
 biocViews: Bayesian, BiologicalQuestion, DataImport, DifferentialExpression, GeneExpression, MassSpectrometry, Preprocessing, Proteomics, Regression, Software
-RoxygenNote: 7.3.2

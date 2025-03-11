@@ -1,6 +1,6 @@
 peptides2Proteins <- function(y, protein.id, sigma=0.5, dpc=c(-4,0.7), prior.mean=6, prior.sd=10, prior.logFC=2, standard.errors=FALSE, newton.polish=FALSE, verbose=FALSE, chunk=1000L)
 # Summarize peptide to protein log-expression for many proteins.
-# Created 10 July 2023. Last modified 29 Dec 2024.
+# Created 10 July 2023. Last modified 7 March 2025.
 {
 # Check y
   y <- as.matrix(y)
@@ -34,6 +34,9 @@ peptides2Proteins <- function(y, protein.id, sigma=0.5, dpc=c(-4,0.7), prior.mea
     if(!identical(nsigma,nproteins)) stop("Length of sigma must equal number of unique proteins")
   }
 
+# Check chunk
+  if(verbose) chunk <- as.integer(chunk)
+
 # Output matrices
   z <- matrix(0,nproteins,nsamples)
   rownames(z) <- protein.id.unique
@@ -42,14 +45,32 @@ peptides2Proteins <- function(y, protein.id, sigma=0.5, dpc=c(-4,0.7), prior.mea
   dimnames(nobs) <- dimnames(z)
   if(standard.errors) stderr <- z
 
+# Simple imputation to get starting values
+  yimp <- imputeByExpTilt(y,dpc.slope=dpc[2],prior.logfc=prior.logFC)
+
 # Summarize peptide to protein expression
   last.row <- 0
   for (i.protein in seq_len(nproteins)) {
-    i <- last.row + seq_len(npeptides[i.protein])
+    npeptidesi <- npeptides[i.protein]
+    i <- last.row + seq_len(npeptidesi)
     yi <- y[i,,drop=FALSE]
+#   Starting values
+    yimpi <- yimp[i,,drop=FALSE]
+    if(npeptidesi > 1L) {
+      nbeta <- nsamples + npeptidesi - 1L
+      beta <- rep_len(0,nbeta)
+      beta[1:nsamples] <- colMeans(yimpi)
+	  b <- rowMeans(yimpi)
+	  b <- b-mean(b)
+	  beta[(nsamples+1):nbeta] <- b[-npeptidesi]
+	} else {
+	  beta <- yimpi[i,]
+	}
+#   Maximize posterior
     out <- peptides2ProteinBFGS(yi, sigma=sigma[i.protein], dpc=dpc,
       prior.mean=prior.mean, prior.sd=prior.sd, prior.logFC=prior.logFC,
-      standard.errors=standard.errors, newton.polish=newton.polish)
+      standard.errors=standard.errors, newton.polish=newton.polish, start=beta)
+#   Assemble output
     z[i.protein,] <- out$protein.expression
     nobs[i.protein,] <- colSums(!is.na(yi))
     if(standard.errors) stderr[i.protein,] <- out$standard.error
