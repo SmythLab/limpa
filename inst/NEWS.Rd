@@ -2,7 +2,22 @@
 \title{limpa News}
 \encoding{UTF-8}
 
- 
+\section{Version 0.99.7 (2025-03-21)}{\itemize{
+\item
+New argument `chunk` for dpcQuant() and dpcImpute().
+
+\item
+dpcImpute() now passes the `verbose` argument to peptides2Proteins().
+
+\item
+Add more background information to the vignette, including references for DIA-NN, Spectronaut and MaxQuant.
+Add mention of voomaLmFitWithImputation().
+
+\item
+Bug fix to starting values in peptides2Proteins() for single-peptide proteins.
+}}
+
+
 \section{Version 0.99.6 (2025-03-11)}{\itemize{
 \item
 expTiltByColumns() is now more robust for datasets with very few rows, especially when the column variance is exactly zero by chance.

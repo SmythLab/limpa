@@ -1,15 +1,17 @@
 ---
 title: Analyzing mass spectrometry data with limpa
 author: "Mengbo Li and Gordon K. Smyth"
-date: "First version 30 December 2024, Last revised 3 March 2025"
+date: "First version 30 December 2024, Last revised 20 March 2025"
 abstract: >
   Mass spectrometry is a powerful tool in biomedical research. 
   Advancements in label-free methods and MS instruments have enabled high-throughput proteomics profiling of biological samples with the increasingly deeper coverage of the proteome, but missing values are still ubiquitous in MS-based proteomics data.
   Single-cell MS-based proteomics has also started to become available, with increased frequency of missing values.
   The limpa package implements a pipeline for quantification and differential expression analysis of mass-spectrometry (MS) proteomics data, with probabilistic information recovery from missing values.
-  A key feature is the ability to quantify protein expression without missing values, even for proteins with a single peptide or with a high proportion of missing values.
-  Another key feature is the ability to propagate quantification uncertainty through to the differential expression analysis, preserving power but avoiding false discoveries.
+  The package accepts peptide-level data, usually including missing values, and produces complete protein quantifications without the need for imputation.
+  A key feature is the ability to quantify an expression value for every protein and every sample, regardless of the number of quantified peptides for each protein or the number of missing values at the peptide level.
+  Another key feature is the ability to propagate quantification uncertainty through to the differential expression analysis, using variance modeling and precision weights, increasing statistical power while avoiding false discoveries.
   limpa produces a linear model object suitable for downstream analysis with the limma package, allowing complex experimental designs and other downstream tasks such as the gene ontology or pathway analysis. 
+  The package name ("limpa") is an acronym for "Linear Models for Proteomics Data".
   limpa package version: `r packageVersion("limpa")`.
 
 output:
@@ -30,6 +32,18 @@ knitr::opts_chunk$set(
 options(digits=4)
 ```
 
+# Background
+
+limpa assumes that data-independent acquisition (DIA) MS proteomics profiling has been performed on a series of biological samples, and that peptide quantifications have been obtained for each sample (Luo et al 2023).
+limma reads the peptide or peptide-precursor data from popular software tools such as DIA-NN (https://github.com/vdemichev/DiaNN) (Demichev et al 2020), Spectronaut (https://staging.biognosys.com/software/spectronaut/) or MaxQuant (Tyanova et al 2016).
+In each case, the peptide quantifications are read into a wide-format (peptide by sample) matrix of log-intensities.
+The only other information required to start a limpa analysis is a vector specifying the protein or protein-group membership of each peptide.
+
+Peptide quantifications typically include missing values for some samples, which cause considerable problems for downstream analyses.
+The missing values can't just be ignored, because they occur more often at low intensities, and missing value imputation also introduces biases and problems.
+limpa uses statistical models developed by Li & Smyth (2023) to evaluate how much information can be recovered from the missing values, quantifying the overall missing value "mechanism" into a detection probability curve (DPC).
+limpa uses the DPC, together with a Bayesian model, to summarize the peptide quantifications into protein-level quantifications and to undertake limma-based differential expression analyses (Li 2024, Ritchie et al 2015).
+
 # Quick start
 
 If `y.peptide` is a matrix of peptide-level log2-intensities (including NAs), `protein.id` is a vector of protein IDs, and `design` is a design matrix, then the following code will quantify complete log2-expression for the proteins without missing values and will conduct a differential expression analysis defined by the design matrix.
@@ -44,7 +58,7 @@ topTable(fit)
 
 # Example analysis
 
-Here is a complete reproducible analysis using a small simulated data.
+Real proteomics datasets are too large to analyze in this vignette, but we can demonstrate a complete reproducible analysis using a small simulated data.
 First, generate the dataset:
 ```{r}
 library(limpa)
@@ -74,6 +88,10 @@ There are no longer any missing values, and the samples now cluster into groups:
 ```{r}
 y.protein <- dpcQuant(y.peptide, "Protein", dpc=dpcfit)
 plotMDS(y.protein)
+Group <- factor(y.peptide$targets$Group)
+Group.color <- Group
+levels(Group.color) <- c("blue","red")
+plotMDS(y.protein, pch=16, col=as.character(Group.color))
 ```
 
 Finally, we conduct a differential expression analysis using the limma package.
@@ -81,7 +99,6 @@ The `dpcDE` function calls limma's `voomaLmFit` function, which was specially de
 `voomaLmFit` computes precision weights, in a similar way to `voom` for RNA-seq, but instead of using count sizes it use the quantification precisions from `dpcQuant`.
 The plot shows how `dpcDE` predicts the protein-wise variances from the quantification uncertainties and expression levels.
 ```{r}
-Group <- factor(y.peptide$targets$Group)
 design <- model.matrix(~Group)
 fit <- dpcDE(y.protein, design, plot=TRUE)
 fit <- eBayes(fit)
@@ -90,6 +107,21 @@ topTable(fit, coef=2)
 This small dataset has five truly DE proteins.
 Four of the give are top-ranked in the DE results.
 The other DE protein is ranked 10th in the DE results and does not achieve statistical significant because it had only 17% detected observations and, hence, a high quantification uncertainty.
+
+To view the log-expression values for the top DE protein, together with standard errors:
+```{r}
+plotProtein(y.protein, "Protein23", col=as.character(Group.color))
+```
+
+# Quantification without protein summaries
+
+For some applications, it is desirable to complete and impute the peptide-level intensities without summarizing them at the protein level.
+This is can done in limpa by
+```
+y.peptide.complete <- dpcImpute(y.peptide, dpc=dpcfit)
+```
+
+# Sesssion information
 
 ```{r}
 sessionInfo()
@@ -110,21 +142,21 @@ reads the `Report.tsv` file written by DIA-NN from the current working directory
 
 We are aware that DIA-NN no longer exports its main report in the `.tsv` format, but in the `.parquet` format from version 2.0. 
 To process DIA-NN data in the `.parquet` format, use
-
 ```{r, eval = FALSE}
-y.peptide <- readDIANN("Report.parquet", format = "p")
+y.peptide <- readDIANN("Report.parquet", format="parquet")
 ```
 
 For data searched with match-between-run (MBR), as suggested by Thierry Nordmann (Max Planck Institute of Biochemistry), we recommend to filter the observations by the following
-
 ```{r, eval = FALSE}
-y.peptide <- readDIANN("report.tsv", q.columns = c("Q.Value", "Lib.Q.Value", "Lib.PG.Q.Value"), q.cutoffs = 0.01)
+y.peptide <- readDIANN("report.tsv",
+             q.columns = c("Q.Value","Lib.Q.Value","Lib.PG.Q.Value"),
+             q.cutoffs = 0.01)
 ```
-
-If without MBR, we recommend
-
+If searched without MBR, we recommend
 ```{r, eval = FALSE}
-y.peptide <- readDIANN("report.tsv", q.columns = c("Q.Value", "Global.Q.Value", "lobal.PG.Q.Value"), q.cutoffs = 0.01)
+y.peptide <- readDIANN("report.tsv",
+             q.columns = c("Q.Value","Global.Q.Value","Global.PG.Q.Value"),
+             q.cutoffs = 0.01)
 ```
 
 After reading in the data, it is common to filter out non-proteotypic peptides by
@@ -145,6 +177,8 @@ This step is entirely optional.
 We generally recommend that users keep all proteins in order to retain maximum information.
 The `dpcQuant()` function will still quantify complete data even for proteins with just one peptide.
 
+Note that peptides do not need to be filtered based on the proportion of detected or missing values.
+limpa can process peptides correctly even if the number of detections is small.
 
 # The detection probability curve
 
@@ -172,13 +206,15 @@ The DPC-Quant uses maximum posterior estimation to quantify the expression of ea
 
 # Differential expression
 
-Finally, limpa passes the protein log2-expression values and associated uncertainties on to the limma package, and uses the `voomaLmFit` function to compute precision weights for each observation.
-`voomaLmFit` uses both protein expression and the quantification standard errors to predict the protein-wise variances and, hence, to construct precision weights for downstream linear modelling.
+Finally, the protein log2-expression values and associated uncertainties are passed to the `voomaLmFitWithImputation` function, which computes precision weights for each observation and fits proteinwise linear models.
+`voomaLmFitWithImputation` combines features from the `voomaLmFit` and `voomLmFit` functions in the limma and edgeR packages.
+It uses both protein expression and the quantification standard errors to predict the protein-wise variances and, hence, to construct precision weights for downstream linear modelling.
 This allows the uncertainty associated with missing values imputation to be propagated through to the differential expression analysis.
-limpa's `dpcDE` function is a wrapper function, passing the appropriate standard errors from `dpcQuant` to `voomaLmFit`.
-The limpa package is fully compatible with limma analysis pipelines, allowing any complex experimental design and other downstream tasks such as the gene ontology or pathway analysis.
+`voomaLmFitWithImputation` also gives special consideration to instances where all the expression values for a particular protein are imputed for one or more treatment conditions, ensuring robust differential expression analyses even for proteins with only a small proportion of detected peptides.
 
-The `dpcDE()` function accepts any argument that `voomaLmFit` does.
+limpa's `dpcDE` function is a wrapper function, passing the appropriate standard errors from `dpcQuant` to `voomaLmFitWithImputation`.
+The limpa package is fully compatible with limma analysis pipelines, allowing any complex experimental design and other downstream tasks such as the gene ontology or pathway analysis.
+The `dpcDE()` function accepts any argument that `voomaLmFitWithImputation` (or `voomaLmFit`) does.
 For example, `dpcDE(y.protein, design, sample.weights=TRUE)` can be used to downweight outlier samples.
 Or `dpc(y.protein, design, block=subject)` could be used to model the correlation between repeated observations on the same subject.
 
@@ -191,11 +227,35 @@ Any questions about limpa can be sent to the [Bioconductor support forum](https:
 We are working on a publication that will fully describe the limpa theory and functionality.
 In the meantime, please cite Li & Smyth (2023), which introduced the idea of the detection probability curve (DPC) that is fundamental to the limpa package.
 
+# Funding
+
+The limpa project was supported by Chan Zuckerberg Initiative EOSS grant 2021-237445, by Melbourne Research and CSL Translational Data Science Scholarships to ML, and by NHMRC Investigator Grant 2025645 to GS.
+
+# Cited references
+
+Demichev V, Messner CB, Vernardis SI, Lilley KS, Ralser M (2020).
+DIA-NN: neural networks and interference correction enable deep proteome coverage in high throughput.
+*Nature Methods* 17(1), 41-44.
+
 Li M, Smyth GK (2023).
 Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics.
 *Bioinformatics* 39(5), btad200.
 [doi:10.1093/bioinformatics/btad200](https://doi.org/10.1093/bioinformatics/btad200)
 
-# Funding
+Li M (2024).
+*Linear Models and Empirical Bayes Methods for Mass Spectrometry-based Proteomics Data*.
+PhD Thesis, University of Melbourne.
+[http://hdl.handle.net/11343/351600](http://hdl.handle.net/11343/351600)
 
-The limpa project was supported by Chan Zuckerberg Initiative EOSS grant 2021-237445, by Melbourne Research and CSL Translational Data Science Scholarships to ML, and by an NHMRC Investigator Grant to GS.
+Lou R, Cao Y, Li S, Lang X, Li Y, Zhang Y, Shui W (2023).
+Benchmarking commonly used software suites and analysis workflows for DIA proteomics and phosphoproteomics.
+*Nature Communications* 14(1), 94.
+
+Ritchie ME, Phipson B, Wu D, Hu Y, Law CW, Shi W, Smyth GK (2015).
+limma powers differential expression analyses for RNA-sequencing and microarray studies.
+*Nucleic Acids Research* 43, e47.
+[doi:10.1093/nar/gkv007](https://doi.org/doi:10.1093/nar/gkv007)
+
+Tyanova S, Temu T, Cox J (2016).
+The MaxQuant computational platform for mass spectrometry-based shotgun proteomics.
+*Nature Protocols* 11, 2301-2319.

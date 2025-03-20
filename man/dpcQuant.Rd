@@ -13,8 +13,8 @@ Use the DPC to quantify protein expression values.
 
 \usage{
 \method{dpcQuant}{EList}(y, protein.id = "Protein.Group", dpc = NULL, dpc.slope = 0.8,
-     verbose = TRUE, ...)
-\method{dpcImpute}{EList}(y, dpc = NULL, dpc.slope = 0.8, verbose = TRUE, ...)
+     verbose = TRUE, chunk = 1000, ...)
+\method{dpcImpute}{EList}(y, dpc = NULL, dpc.slope = 0.8, verbose = TRUE, chunk = 1000, ...)
 }
 
 \arguments{
@@ -37,6 +37,10 @@ Use the DPC to quantify protein expression values.
   \item{verbose}{
     should progress information be output?
     If \code{TRUE}, then progress information is output every 1000 proteins.
+  }
+  \item{chunk}{
+    When \code{verbose=TRUE}, how often to output progress information.
+    By default, reports every 1000 proteins.
   }
   \item{\dots}{
     other arguments are passed to \code{dpcQuantHyparam}.

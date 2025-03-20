@@ -60,12 +60,12 @@ peptides2Proteins <- function(y, protein.id, sigma=0.5, dpc=c(-4,0.7), prior.mea
       nbeta <- nsamples + npeptidesi - 1L
       beta <- rep_len(0,nbeta)
       beta[1:nsamples] <- colMeans(yimpi)
-	  b <- rowMeans(yimpi)
-	  b <- b-mean(b)
-	  beta[(nsamples+1):nbeta] <- b[-npeptidesi]
-	} else {
-	  beta <- yimpi[i,]
-	}
+      b <- rowMeans(yimpi)
+      b <- b-mean(b)
+      beta[(nsamples+1):nbeta] <- b[-npeptidesi]
+    } else {
+      beta <- drop(yimpi)
+    }
 #   Maximize posterior
     out <- peptides2ProteinBFGS(yi, sigma=sigma[i.protein], dpc=dpc,
       prior.mean=prior.mean, prior.sd=prior.sd, prior.logFC=prior.logFC,

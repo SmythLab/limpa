@@ -1,9 +1,9 @@
 dpcQuant <- function(y, ...)
   UseMethod("dpcQuant")
 
-dpcQuant.default <- function(y, protein.id, dpc=NULL, dpc.slope=0.8, verbose=TRUE, ...)
+dpcQuant.default <- function(y, protein.id, dpc=NULL, dpc.slope=0.8, verbose=TRUE, chunk=1000L, ...)
 # Use the DPC to quantify protein expression values by maximum posterior.
-# Created 31 Dec 2024. Last modified 4 Jan 2025.
+# Created 31 Dec 2024. Last modified 23 Mar 2025.
 {
 # Check y
   y <- as.matrix(y)
@@ -14,10 +14,10 @@ dpcQuant.default <- function(y, protein.id, dpc=NULL, dpc.slope=0.8, verbose=TRU
 
 # Construct EList and pass to EList method
   z <- new("EList",list(E=y,genes=data.frame(Protein=protein.id)))
-  dpcQuant(z,protein.id=protein.id,dpc=dpc,dpc.slope=dpc.slope,verbose=verbose,...)
+  dpcQuant(z,protein.id=protein.id,dpc=dpc,dpc.slope=dpc.slope,verbose=verbose,chunk=chunk,...)
 }
 
-dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, dpc.slope=0.8, verbose=TRUE, ...)
+dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, dpc.slope=0.8, verbose=TRUE, chunk=1000L, ...)
 # Use the DPC to quantify protein expression values by maximum posterior.
 # Created 27 Dec 2024. Last modified 9 Jan 2024.
 {
@@ -59,7 +59,8 @@ dpcQuant.EList <- function(y, protein.id="Protein.Group", dpc=NULL, dpc.slope=0.
                           prior.sd = h$prior.sd,
                           prior.logFC = h$prior.logFC,
                           standard.errors = TRUE,
-                          verbose = verbose)
+                          verbose = verbose,
+                          chunk = chunk)
 
 # Add back original original annotation
   d <- !duplicated(protein.id)
