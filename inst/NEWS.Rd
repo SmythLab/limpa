@@ -2,6 +2,13 @@
 \title{limpa News}
 \encoding{UTF-8}
 
+
+\section{Version 0.99.8 (2025-03-22)}{\itemize{
+\item
+Add Mengbo Li as joint maintainer.
+}}
+
+
 \section{Version 0.99.7 (2025-03-21)}{\itemize{
 \item
 New argument `chunk` for dpcQuant() and dpcImpute().

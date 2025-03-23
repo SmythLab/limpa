@@ -60,7 +60,7 @@ topTable(fit)
 
 Real proteomics datasets are too large to analyze in this vignette, but we can demonstrate a complete reproducible analysis using a small simulated data.
 First, generate the dataset:
-```{r}
+```{r sim}
 library(limpa)
 set.seed(20241230)
 y.peptide <- simProteinDataSet()
@@ -69,7 +69,7 @@ The dataset is stored as a limma EList object, with components `E` (log2-express
 The simulation function can generate any number of peptides or proteins but, by default, the dataset has 100 peptides belonging to 25 proteins and the samples are in two groups with $n=5$ replicates in each group.
 About 40% of the expression values are missing.
 
-```{r}
+```{r meanNA}
 dim(y.peptide)
 head(y.peptide$genes)
 table(y.peptide$targets$Group)
@@ -77,7 +77,7 @@ mean(is.na(y.peptide$E))
 ```
 
 Next we estimate the intercept and slope of the detection probability curve, which relates the probability of detection to the underlying peptide expression level on the logit scale.
-```{r}
+```{r dpc}
 dpcfit <- dpc(y.peptide)
 dpcfit$dpc
 plotDPC(dpcfit)
@@ -85,7 +85,7 @@ plotDPC(dpcfit)
 
 Then we use the DPC to quantify the protein log2-expression values, using the DPC to represent the missing values.
 There are no longer any missing values, and the samples now cluster into groups:
-```{r}
+```{r dpcQuant}
 y.protein <- dpcQuant(y.peptide, "Protein", dpc=dpcfit)
 plotMDS(y.protein)
 Group <- factor(y.peptide$targets$Group)
@@ -98,7 +98,7 @@ Finally, we conduct a differential expression analysis using the limma package.
 The `dpcDE` function calls limma's `voomaLmFit` function, which was specially developed for use with limpa.
 `voomaLmFit` computes precision weights, in a similar way to `voom` for RNA-seq, but instead of using count sizes it use the quantification precisions from `dpcQuant`.
 The plot shows how `dpcDE` predicts the protein-wise variances from the quantification uncertainties and expression levels.
-```{r}
+```{r dpcDE}
 design <- model.matrix(~Group)
 fit <- dpcDE(y.protein, design, plot=TRUE)
 fit <- eBayes(fit)
@@ -109,7 +109,7 @@ Four of the give are top-ranked in the DE results.
 The other DE protein is ranked 10th in the DE results and does not achieve statistical significant because it had only 17% detected observations and, hence, a high quantification uncertainty.
 
 To view the log-expression values for the top DE protein, together with standard errors:
-```{r}
+```{r plotProtein}
 plotProtein(y.protein, "Protein23", col=as.character(Group.color))
 ```
 
@@ -123,7 +123,7 @@ y.peptide.complete <- dpcImpute(y.peptide, dpc=dpcfit)
 
 # Sesssion information
 
-```{r}
+```{r sessionInfo}
 sessionInfo()
 ```
 
