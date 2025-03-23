@@ -8,7 +8,7 @@ importFrom("stats", "binomial", "coef", "contrasts<-", "contr.sum", "dbeta", "db
 importFrom("graphics", "arrows", "axis", "legend", "lines")
 importFrom("data.table", "fread")
 importFrom("statmod", "gauss.quad.prob", "logmdigamma")
-importFrom("limma", "squeezeVar")
+importFrom("limma", "plotMDS", "squeezeVar")
 
 # Extra imports for voomaLmFitWithImputation
 importFrom("stats", "approxfun", "hat", "lowess")
@@ -16,7 +16,7 @@ importFrom("graphics", "title")
 importFrom("limma", "arrayWeights", "asMatrixWeights", "chooseLowessSpan", "duplicateCorrelation",
            "loessFit", "lmFit")
 
-importClassesFrom("limma", "EList", "EListRaw")
+importClassesFrom("limma", "EList", "EListRaw", "MDS")
 
 S3method(dpcImpute,default)
 S3method(dpcImpute,EList)

@@ -3,6 +3,12 @@
 \encoding{UTF-8}
 
 
+\section{Version 0.99.9 (2025-03-23)}{\itemize{
+\item
+New function plotMDSUsingSEs().
+}}
+
+
 \section{Version 0.99.8 (2025-03-22)}{\itemize{
 \item
 Add Mengbo Li as joint maintainer.
