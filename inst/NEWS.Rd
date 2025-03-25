@@ -3,6 +3,15 @@
 \encoding{UTF-8}
 
 
+\section{Version 0.99.10 (2025-03-25)}{\itemize{
+\item
+Use new function plotMDSUsingSEs() in vignette.
+
+\item
+Remove Author and Maintainer fields from DESCRIPTION again.
+}}
+
+
 \section{Version 0.99.9 (2025-03-23)}{\itemize{
 \item
 New function plotMDSUsingSEs().
@@ -12,6 +21,7 @@ New function plotMDSUsingSEs().
 \section{Version 0.99.8 (2025-03-22)}{\itemize{
 \item
 Add Mengbo Li as joint maintainer.
+Add Author and Maintainer fields to DESCRIPTION.
 }}
 
 

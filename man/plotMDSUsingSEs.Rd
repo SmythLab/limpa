@@ -7,7 +7,8 @@ Plot samples on a two-dimensional scatterplot so that distances on the plot appr
 }
 
 \usage{
-plotMDSUsingSEs(y, top = 500, labels = NULL, pch = NULL, cex = 1, dim.plot = c(1,2),
+plotMDSUsingSEs(y, top = 500, labels = NULL, pch = NULL, cex = 1,
+     dim.plot = c(1,2), gene.selection = "pairwise",
      xlab = NULL, ylab = NULL, plot = TRUE, var.explained = TRUE, \dots)
 }
 
@@ -18,6 +19,7 @@ plotMDSUsingSEs(y, top = 500, labels = NULL, pch = NULL, cex = 1, dim.plot = c(1
   \item{pch}{plotting symbol or symbols. See \code{\link{points}} for possible values. Ignored if \code{labels} is non-\code{NULL}.}
   \item{cex}{numeric vector of plot symbol expansions.}
   \item{dim.plot}{integer vector of length two specifying which principal components should be plotted.}
+  \item{gene.selection}{character, \code{"pairwise"} to choose the top genes separately for each pairwise comparison between the samples or \code{"common"} to select the same genes for all comparisons.}
   \item{xlab}{title for the x-axis.}
   \item{ylab}{title for the y-axis.}
   \item{plot}{logical. If \code{TRUE} then a plot is created on the current graphics device.}
