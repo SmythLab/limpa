@@ -3,6 +3,12 @@
 \encoding{UTF-8}
 
 
+\section{Version 0.99.11 (2025-04-55)}{\itemize{
+\item
+Remove reference to DIA in vignette, because limpa works for both DIA and DDA.
+}}
+
+
 \section{Version 0.99.10 (2025-03-25)}{\itemize{
 \item
 Use new function plotMDSUsingSEs() in vignette.

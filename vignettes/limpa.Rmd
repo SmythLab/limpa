@@ -34,7 +34,7 @@ options(digits=4)
 
 # Background
 
-limpa assumes that data-independent acquisition (DIA) MS proteomics profiling has been performed on a series of biological samples, and that peptide quantifications have been obtained for each sample (Luo et al 2023).
+limpa assumes that label-free proteomics profiling has been performed on a series of biological samples, and that peptide quantifications have been obtained for each sample (Luo et al 2023).
 limma reads the peptide or peptide-precursor data from popular software tools such as DIA-NN (https://github.com/vdemichev/DiaNN) (Demichev et al 2020), Spectronaut (https://staging.biognosys.com/software/spectronaut/) or MaxQuant (Tyanova et al 2016).
 In each case, the peptide quantifications are read into a wide-format (peptide by sample) matrix of log-intensities.
 The only other information required to start a limpa analysis is a vector specifying the protein or protein-group membership of each peptide.
