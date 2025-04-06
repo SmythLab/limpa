@@ -9,7 +9,7 @@ voomaLmFitWithImputation <- function(
 #	Creates an MArrayLM object for entry to eBayes() etc in the limma pipeline.
 #	Corrects for loss of residual df due to entirely imputed values in a group.
 #	Mengbo Li and Gordon Smyth
-#	Created 24 Nov 2023. Last modifed 13 Jan 2025.
+#	Created 24 Nov 2023. Last modifed 6 Apr 2025.
 {
 	Block <- !is.null(block)
 	PriorWeights <- !is.null(prior.weights)
@@ -44,6 +44,8 @@ voomaLmFitWithImputation <- function(
 		} else {
 			if(!identical(ncol(predictor),narrays)) stop("predictor is of wrong dimension")
 		}
+		if(is.infinite(min(predictor,na.rm=TRUE))) stop("predictor contains infinite values")
+		if(is.infinite(max(predictor,na.rm=TRUE))) stop("predictor contains infinite values")
 		if(anyNA(predictor)) {
 			if(anyNA(y$E)) {
 				if(anyNA( predictor[!is.na(y$E)] )) stop("All observed y values must have non-NA predictors")
