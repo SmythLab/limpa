@@ -6,9 +6,14 @@ Read Spectronaut Reports.tsv file into EList object.
 }
 
 \usage{
-readSpectronaut(file = "Report.tsv", path = NULL, sep = "\t", log = TRUE,
-                run.column = "R.Raw File Name", qty.column = "EG.TotalQuantity",
-                q.columns = c("EG.Qvalue", "PG.Qvalue"), q.cutoffs = 0.01)
+readSpectronaut(
+  file="Report.tsv", path=NULL, sep="\t", log=TRUE,
+  run.column = "R.Raw File Name",
+  precursor.column = "EG.PrecursorId",
+  qty.column = "EG.TotalQuantity (Settings)",
+  q.columns = c("EG.Qvalue", "PG.Qvalue"), q.cutoffs = 0.01,
+  extra.columns = c("PG.ProteinAccessions", "EG.IsImputed")
+)
 }
 
 \arguments{
@@ -16,10 +21,12 @@ readSpectronaut(file = "Report.tsv", path = NULL, sep = "\t", log = TRUE,
   \item{path}{character string giving the directory containing the file. Defaults to the current working directory.}
   \item{sep}{the field separator character}
   \item{log}{logical. If \code{TRUE} then intensities will be returned on the log2 scale, otherwise unlogged with zeros.}
-  \item{run.column}{column containing run}
-  \item{qty.column}{column containing intensities}
+  \item{run.column}{column containing run. String of length 1L.}
+  \item{precursor.column}{column containing precursor IDs. String of length 1L.}
+  \item{qty.column}{column containing intensities. String of length 1L.}
   \item{q.columns}{column headings in the Spectronaut output containing Q-values for peptide identification. Character vector.}
   \item{q.cutoffs}{cutoffs to apply to the Q-value columns. Only peptides with values below the cutoffs will be retained. Numeric vector of same length as \code{q.columns}.}
+  \item{extra.column}{extra columns that are appended to the precursor annotation matrix.}
 }
 
 \details{
