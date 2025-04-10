@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 
 
-\section{Version 0.99.12 (2025-04-07)}{\itemize{
+\section{Version 0.99.12 (2025-04-10)}{\itemize{
 \item
 dpcQuant() and peptides2Proteins() now return essentially equal values if there are 
 multiple entirely imputed values for the same protein.
