@@ -1,6 +1,6 @@
 
-R version 4.4.2 (2024-10-31 ucrt) -- "Pile of Leaves"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R version 4.5.0 alpha (2025-03-18 r87998 ucrt)
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -56,7 +56,7 @@ Proteins: 25 Peptides: 100
  1st Qu.:3.935   1st Qu.:-0.19334  
  Median :5.807   Median :-0.08129  
  Mean   :5.840   Mean   : 0.01623  
- 3rd Qu.:7.993   3rd Qu.: 0.16886  
+ 3rd Qu.:7.993   3rd Qu.: 0.16887  
  Max.   :9.398   Max.   : 1.11169  
 > summary(fit$sigma)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
@@ -64,4 +64,4 @@ Proteins: 25 Peptides: 100
 > 
 > proc.time()
    user  system elapsed 
-   0.26    0.14    0.37 
+   0.32    0.15    0.51 

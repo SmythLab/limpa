@@ -3,7 +3,28 @@
 \encoding{UTF-8}
 
 
-\section{Version 0.99.11 (2025-04-55)}{\itemize{
+\section{Version 0.99.12 (2025-04-07)}{\itemize{
+\item
+dpcQuant() and peptides2Proteins() now return essentially equal values if there are 
+multiple entirely imputed values for the same protein.
+
+\item
+Update readSpectronaut() to allow more flexibility regarding which columns are read.
+
+\item
+Bug fix to voomaLmFitWithImputation() for proteins
+that are almost entirely imputed and have no remaining
+degrees of freedom for estimating the residual variance.
+Previously the degrees of freedom were not always being recognized as zero
+because of floating point errors.
+
+\item
+New calculation of lost degrees of freedom in voomaLmFitWithImputation().
+The new method always returns integer residual degrees of freedom and no longer assumes that entirely imputed values are all equal for the same gene.
+}}
+
+
+\section{Version 0.99.11 (2025-04-05)}{\itemize{
 \item
 Remove reference to DIA in vignette, because limpa works for both DIA and DDA.
 }}

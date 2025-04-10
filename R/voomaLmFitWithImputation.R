@@ -9,7 +9,7 @@ voomaLmFitWithImputation <- function(
 #	Creates an MArrayLM object for entry to eBayes() etc in the limma pipeline.
 #	Corrects for loss of residual df due to entirely imputed values in a group.
 #	Mengbo Li and Gordon Smyth
-#	Created 24 Nov 2023. Last modifed 6 Apr 2025.
+#	Created 24 Nov 2023. Last modifed 10 Apr 2025.
 {
 	Block <- !is.null(block)
 	PriorWeights <- !is.null(prior.weights)
@@ -80,23 +80,38 @@ voomaLmFitWithImputation <- function(
 #	Correct for loss of residual degrees of freedom from imputed values
 	DFLoss <- FALSE
 	if(!is.null(imputed)) {
-		HasImp <- which(NImputed > 1L)
-		EHasImp <- y$E[HasImp,,drop=FALSE]
-		Imp <- imputed[HasImp,,drop=FALSE]
-		Res <- EHasImp - fitted.values[HasImp,,drop=FALSE]
 		h <- 1-hat(design)
-		LostDF <- ( (abs(Res) < 1e-6) & Imp ) %*% h
-		HasDFLoss <- HasImp[LostDF > 0L]
-		if(length(HasDFLoss)) {
-			DFLoss <- TRUE
-			LostDF <- LostDF[LostDF > 0L]
-			sigma <- fit$sigma[HasDFLoss]
-			df.res <- fit$df.residual[HasDFLoss]
-			df.res.adj <- df.res - LostDF
-			sigma.adj <- sqrt(df.res*sigma^2 / df.res.adj)
-			sigma.adj[df.res.adj == 0] <- 1
-			fit$sigma[HasDFLoss] <- sigma.adj
-			fit$df.residual[HasDFLoss] <- df.res.adj
+		DFImputed <- imputed %*% (1-h)
+		HasImp <- which(DFImputed > 0.9999)
+		if(length(HasImp)) {
+			EHasImp <- y$E[HasImp,,drop=FALSE]
+			IHasImp <- imputed[HasImp,,drop=FALSE]
+			fit1 <- lm.fit(design,t(EHasImp))
+			EHasImp2 <- EHasImp
+			EHasImp2[!IHasImp] <- EHasImp2[!IHasImp] + ncol(y) + 1
+			fit2 <- lm.fit(design,t(EHasImp2))
+			NoChange <- t(abs(fit2$fitted.values - fit1$fitted.values) < 0.01)
+			AllImpFitVal <- IHasImp & NoChange
+			HasAllImpFitVal <- which(rowSums(AllImpFitVal) > 0)
+			DFLoss <- length(HasAllImpFitVal) > 0
+		}
+		if(DFLoss) {
+			if(length(HasAllImpFitVal) < length(HasImp)) {
+				HasImp <- HasImp[HasAllImpFitVal]
+				EHasImp <- EHasImp[HasAllImpFitVal,,drop=FALSE]
+				AllImpFitVal <- AllImpFitVal[HasAllImpFitVal,,drop=FALSE]
+			}
+			EHasImpNA <- EHasImp
+			EHasImpNA[AllImpFitVal] <- NA
+			fitNA <- suppressWarnings(lmFit(EHasImpNA,design,weights=prior.weights[HasImp,,drop=FALSE]))
+			if(min(fitNA$df.residual) < 0.5) {
+				NoDF <- fitNA$df.residual < 0.5
+				fitNA$sigma[NoDF] <- median(fit$sigma,na.rm=TRUE)
+				fitNA$Amean[NoDF] <- median(fit$Amean,na.rm=TRUE)
+			}
+			fit$sigma[HasImp] <- fitNA$sigma
+			fit$df.residual[HasImp] <- fitNA$df.residual
+			A[HasImp] <- fitNA$Amean
 		}
 	}
 
@@ -108,6 +123,12 @@ voomaLmFitWithImputation <- function(
 #	Optionally combine ave log intensity with precision predictor
 	if(!is.null(predictor)) {
 		sxc <- rowMeans(predictor, na.rm = TRUE)
+		if(DFLoss) {
+			predictorNA <- predictor[HasImp,,drop=FALSE]
+			predictorNA[AllImpFitVal] <- NA
+			sxc[HasImp] <- rowMeans(predictorNA,na.rm=TRUE)
+			if(anyNA(sxc)) sxc[is.na(sxc)] <- median(sxc,na.rm=TRUE)
+		}
 		vartrend <- lm.fit(cbind(1,sx,sxc),sy)
 		beta <- coef(vartrend)
 		sx <- vartrend$fitted.values
@@ -193,11 +214,12 @@ voomaLmFitWithImputation <- function(
 		}
 #		Correct for loss of residual degrees of freedom from imputed values
 		if(DFLoss) {
-			sigma <- fit$sigma[HasDFLoss]
-			sigma.adj <- sqrt(df.res*sigma^2 / df.res.adj)
-			sigma.adj[df.res.adj == 0] <- 1
-			fit$sigma[HasDFLoss] <- sigma.adj
-			fit$df.residual[HasDFLoss] <- df.res.adj
+			fitNA <- suppressWarnings(lmFit(EHasImpNA,design,block=block,correlation=correlation,weights=weights[HasImp,,drop=FALSE]))
+			if(min(fitNA$df.residual) < 0.5) {
+				fitNA$sigma[fitNA$df.residual < 0.5] <- median(fit$sigma,na.rm=TRUE)
+			}
+			fit$sigma[HasImp] <- fitNA$sigma
+			fit$df.residual[HasImp] <- fitNA$df.residual
 		}
 #		Prepare to fit NEW lowess trend
 		sx <- A
@@ -251,11 +273,12 @@ voomaLmFitWithImputation <- function(
 #	Final linear model fit with voom weights
 	fit <- lmFit(y,design,block=block,correlation=correlation,weights=weights)
 	if(DFLoss) {
-		sigma <- fit$sigma[HasDFLoss]
-		sigma.adj <- sqrt(df.res*sigma^2 / df.res.adj)
-		sigma.adj[df.res.adj == 0] <- 1
-		fit$sigma[HasDFLoss] <- sigma.adj
-		fit$df.residual[HasDFLoss] <- df.res.adj
+		fitNA <- suppressWarnings(lmFit(EHasImpNA,design,block=block,correlation=correlation,weights=weights[HasImp,,drop=FALSE]))
+		if(min(fitNA$df.residual) < 0.5) {
+			fitNA$sigma[fitNA$df.residual < 0.5] <- median(fit$sigma,na.rm=TRUE)
+		}
+		fit$sigma[HasImp] <- fitNA$sigma
+		fit$df.residual[HasImp] <- fitNA$df.residual
 	}
 
 #	Output
@@ -272,6 +295,7 @@ voomaLmFitWithImputation <- function(
 		}
 	}
 	fit$span <- span
+	fit$var.predictor <- sx
 	if(save.plot) {
 		fit$voom.xy <- list(x=sx,y=sy,xlab=xlab,ylab="Sqrt( standard deviation )",pch=16,cex=0.25)
 		fit$voom.line <- l

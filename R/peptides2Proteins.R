@@ -1,6 +1,6 @@
 peptides2Proteins <- function(y, protein.id, sigma=0.5, dpc=c(-4,0.7), prior.mean=6, prior.sd=10, prior.logFC=2, standard.errors=FALSE, newton.polish=FALSE, verbose=FALSE, chunk=1000L)
 # Summarize peptide to protein log-expression for many proteins.
-# Created 10 July 2023. Last modified 7 March 2025.
+# Created 10 July 2023. Last modified 9 March 2025.
 {
 # Check y
   y <- as.matrix(y)
@@ -54,6 +54,7 @@ peptides2Proteins <- function(y, protein.id, sigma=0.5, dpc=c(-4,0.7), prior.mea
     npeptidesi <- npeptides[i.protein]
     i <- last.row + seq_len(npeptidesi)
     yi <- y[i,,drop=FALSE]
+    nobsi <- colSums(!is.na(yi))
 #   Starting values
     yimpi <- yimp[i,,drop=FALSE]
     if(npeptidesi > 1L) {
@@ -66,13 +67,15 @@ peptides2Proteins <- function(y, protein.id, sigma=0.5, dpc=c(-4,0.7), prior.mea
     } else {
       beta <- drop(yimpi)
     }
+    IsImp <- which(nobsi==0)
+    if(length(IsImp) > 1L) beta[IsImp] <- mean(beta[IsImp])
 #   Maximize posterior
     out <- peptides2ProteinBFGS(yi, sigma=sigma[i.protein], dpc=dpc,
       prior.mean=prior.mean, prior.sd=prior.sd, prior.logFC=prior.logFC,
       standard.errors=standard.errors, newton.polish=newton.polish, start=beta)
 #   Assemble output
     z[i.protein,] <- out$protein.expression
-    nobs[i.protein,] <- colSums(!is.na(yi))
+    nobs[i.protein,] <- nobsi
     if(standard.errors) stderr[i.protein,] <- out$standard.error
     last.row <- last.row + npeptides[i.protein]
     if(verbose) {

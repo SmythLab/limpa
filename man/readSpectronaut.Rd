@@ -7,7 +7,7 @@ Read Spectronaut Reports.tsv file into EList object.
 
 \usage{
 readSpectronaut(
-  file="Report.tsv", path=NULL, sep="\t", log=TRUE,
+  file = "Report.tsv", path = NULL, sep = "\t", log = TRUE,
   run.column = "R.Raw File Name",
   precursor.column = "EG.PrecursorId",
   qty.column = "EG.TotalQuantity (Settings)",
@@ -26,7 +26,7 @@ readSpectronaut(
   \item{qty.column}{column containing intensities. String of length 1L.}
   \item{q.columns}{column headings in the Spectronaut output containing Q-values for peptide identification. Character vector.}
   \item{q.cutoffs}{cutoffs to apply to the Q-value columns. Only peptides with values below the cutoffs will be retained. Numeric vector of same length as \code{q.columns}.}
-  \item{extra.column}{extra columns that are appended to the precursor annotation matrix.}
+  \item{extra.columns}{extra columns that are appended to the precursor annotation matrix.}
 }
 
 \details{
@@ -38,7 +38,7 @@ Spectronaut (https://biognosys.com/software/spectronaut/) writes a file in long 
 If \code{log=FALSE}, an EListRaw object containing precursor-level unlogged intensities with zeros and protein annotation.
 If \code{log=TRUE}, an EList object containing precursor-level log2 intensities with NAs and protein annotation.
 Rows are peptide-precursors and columns are samples.
-Peptide precursor and protein annotation is stored in the `genes` output component.
+Peptide precursor and protein annotation is stored in the \code{genes} output component.
 }
 
 \examples{
