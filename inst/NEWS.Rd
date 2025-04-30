@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 
 
-\section{Version 0.99.12 (2025-04-10)}{\itemize{
+\section{Version 1.0.0 (2025-04-16)}{\itemize{
 \item
 dpcQuant() and peptides2Proteins() now return essentially equal values if there are 
 multiple entirely imputed values for the same protein.
@@ -12,47 +12,11 @@ multiple entirely imputed values for the same protein.
 Update readSpectronaut() to allow more flexibility regarding which columns are read.
 
 \item
-Bug fix to voomaLmFitWithImputation() for proteins
-that are almost entirely imputed and have no remaining
-degrees of freedom for estimating the residual variance.
-Previously the degrees of freedom were not always being recognized as zero
-because of floating point errors.
-
-\item
-New calculation of lost degrees of freedom in voomaLmFitWithImputation().
-The new method always returns integer residual degrees of freedom and no longer assumes that entirely imputed values are all equal for the same gene.
-}}
-
-
-\section{Version 0.99.11 (2025-04-05)}{\itemize{
-\item
 Remove reference to DIA in vignette, because limpa works for both DIA and DDA.
-}}
-
-
-\section{Version 0.99.10 (2025-03-25)}{\itemize{
-\item
-Use new function plotMDSUsingSEs() in vignette.
 
 \item
-Remove Author and Maintainer fields from DESCRIPTION again.
-}}
+New function plotMDSUsingSEs(), which accounts for standard errors when computing between-sample distances for the plot.
 
-
-\section{Version 0.99.9 (2025-03-23)}{\itemize{
-\item
-New function plotMDSUsingSEs().
-}}
-
-
-\section{Version 0.99.8 (2025-03-22)}{\itemize{
-\item
-Add Mengbo Li as joint maintainer.
-Add Author and Maintainer fields to DESCRIPTION.
-}}
-
-
-\section{Version 0.99.7 (2025-03-21)}{\itemize{
 \item
 New argument `chunk` for dpcQuant() and dpcImpute().
 
@@ -65,10 +29,7 @@ Add mention of voomaLmFitWithImputation().
 
 \item
 Bug fix to starting values in peptides2Proteins() for single-peptide proteins.
-}}
 
-
-\section{Version 0.99.6 (2025-03-11)}{\itemize{
 \item
 expTiltByColumns() is now more robust for datasets with very few rows, especially when the column variance is exactly zero by chance.
 It originally assumed that the number of rows would always be large.
@@ -80,17 +41,11 @@ This improves speed slightly and makes the starting values more robust for large
 
 \item
 readDIANN() now supports DIA-NN output in either tsv or Parquet formats.
-}}
 
-
-\section{Version 0.99.5 (2025-02-25)}{\itemize{
 \item
 New functions dpcImpute() and dpcImputeHyperparam() to facilitate imputation and differential expression analysis at the peptide level.
 This may be needed for phosphoproteomics and analogous applications.
-}}
 
-
-\section{Version 0.99.4 (2025-02-15)}{\itemize{
 \item
 Package title changed to "Quantification and Differential Analysis of Proteomics Data", and package description expanded.
 
@@ -108,30 +63,21 @@ dpc() now checks for peptides that are entirely missing.
 
 \item
 plotDPC() now accepts input from either dpc() or dpcCN().
-It now estimates jittering amount automatically.
+It now estimates the jittering amount automatically.
 
 \item
 Add readDIANN() code to vignette.
-}}
 
-
-\section{Version 0.99.3 (2025-02-15)}{\itemize{
 \item
 Add peptide filtering to vignette.
 
 \item
-New function voomaLmFitWithImputation(), which is the same as limma::voomaLmFit() except that it allows for loss of degrees of freedom when all the values for a particular protein in a particular group are imputed and identical.
-dpcDE() now calls thew new function instead of limma::voomaLmFit(), making the differential expression analysis more robust to high rates of missing values.
-}}
+New function voomaLmFitWithImputation(), which is the same as limma::voomaLmFit() except that it allows for loss of degrees of freedom when all the values for a particular protein in a particular group are imputed.
+dpcDE() now calls this new function instead of limma::voomaLmFit(), making the differential expression analysis more robust to high rates of missing values.
 
-
-\section{Version 0.99.2 (2025-01-13)}{\itemize{
 \item
 Fix dpcQuant() `genes` output when the input `y` is a plain matrix instead of an `EList` object.
-}}
 
-
-\section{Version 0.99.1 (2025-01-04)}{\itemize{
 \item
 New argument `dpc.slope` for dpcQuant(), to allow the use of a preset DPC slope.
 

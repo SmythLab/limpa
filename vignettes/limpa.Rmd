@@ -1,7 +1,7 @@
 ---
 title: Analyzing mass spectrometry data with limpa
 author: "Mengbo Li and Gordon K. Smyth"
-date: "First version 30 December 2024, Last revised 4 April 2025"
+date: "First version 30 December 2024, Last revised 30 April 2025"
 abstract: >
   Mass spectrometry is a powerful tool in biomedical research. 
   Advancements in label-free methods and MS instruments have enabled high-throughput proteomics profiling of biological samples with the increasingly deeper coverage of the proteome, but missing values are still ubiquitous in MS-based proteomics data.
@@ -204,8 +204,14 @@ The DPC slope $\beta_1$ is nevertheless often under-estimated if the variability
 # Quantification
 
 limpa uses the DPC, together with a Bayesian model, to estimate the expression level of each protein in each sample.
-A multivariate normal prior is estimated empirically from data to describe the variability in log-intensities across the samples and across the peptides.
-The DPC-Quant uses maximum posterior estimation to quantify the expression of each protein in each sample, and also returns the posterior standard error with which each expression value is estimated.
+It fits an additive model
+$$\mu_{ij} = \gamma_i + \delta_j$$
+to the peptide log-intensities for each protein, where $\mu_{ij}$ is the expected log-expression of peptide $j$ in sample $i$, $\gamma_i$ is the log-expression level of the protein in sample $i$ and $\delta_j$ is the baseline effect for peptide $j$.
+A sum-to-zero constraint is applied to the peptide effects $\delta_j$ so that the protein expression $\gamma_i$ represents the average log-expression of the peptides in sample $i$.
+The log-likelihood consists of squared residuals for each observed peptide value and the log probability of being missing for each non-detected peptide value.
+A multivariate normal prior is also applied to the protein log-expression values, where the prior is estimated from the global data for all proteins.
+DPC-Quant maximizes the log-posterior with respect to the $\gamma_i$s and $\delta_j$s, and the final $\gamma_i$s become the protein quantifications.
+DPC-Quant also returns the posterior standard error with which each log-expression value is estimated.
 
 # Differential expression
 
@@ -227,8 +233,10 @@ Any questions about limpa can be sent to the [Bioconductor support forum](https:
 
 # How to cite
 
-We are working on a publication that will fully describe the limpa theory and functionality.
-In the meantime, please cite Li & Smyth (2023), which introduced the idea of the detection probability curve (DPC) that is fundamental to the limpa package.
+Li M, Cobbold SA, Smyth GK (2025).
+Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
+*bioRxiv* 2025/651125.
+[doi:10.1101/2025.04.28.651125](https://doi.org/10.1101/2025.04.28.651125)
 
 # Funding
 
@@ -244,6 +252,11 @@ Li M, Smyth GK (2023).
 Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics.
 *Bioinformatics* 39(5), btad200.
 [doi:10.1093/bioinformatics/btad200](https://doi.org/10.1093/bioinformatics/btad200)
+
+Li M, Cobbold SA, Smyth GK (2025).
+Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
+*bioRxiv* 2025/651125.
+[doi:10.1101/2025.04.28.651125](https://doi.org/10.1101/2025.04.28.651125)
 
 Li M (2024).
 *Linear Models and Empirical Bayes Methods for Mass Spectrometry-based Proteomics Data*.

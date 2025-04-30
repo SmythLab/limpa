@@ -295,7 +295,6 @@ voomaLmFitWithImputation <- function(
 		}
 	}
 	fit$span <- span
-	fit$var.predictor <- sx
 	if(save.plot) {
 		fit$voom.xy <- list(x=sx,y=sy,xlab=xlab,ylab="Sqrt( standard deviation )",pch=16,cex=0.25)
 		fit$voom.line <- l

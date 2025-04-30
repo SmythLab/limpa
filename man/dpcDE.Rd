@@ -13,12 +13,12 @@ dpcDE(y, design, plot=TRUE, ...)
   \item{y}{protein-level EList produced by dpcQuant().}
   \item{design}{design matrix.}
   \item{plot}{should the variance trend be plotted?}
-  \item{\dots}{other arguments are passed to \code{voomaLmFit}.}
+  \item{\dots}{other arguments are passed to \code{voomaLmFitWithImputation}.}
 }
 
 \details{
-Calls \code{\link{voomaLmFit}} to compute vooma precision weights from the DPC-Quant standard errors stored in \code{y} and to use those weights to fit protein-wise linear models.
-Any \code{voomaLmFit} functinality can be used, giving access to optional empirical sample weights or random blocks.
+Calls \code{\link{voomaLmFitWithImputation}} to compute vooma precision weights from the DPC-Quant standard errors stored in \code{y} and to use those weights to fit protein-wise linear models.
+Any \code{voomaLmFit} functionality can be used, giving access to optional empirical sample weights or random blocks.
 }
 
 \value{
@@ -30,10 +30,15 @@ Li M (2024).
 Linear Models and Empirical Bayes Methods for Mass Spectrometry-based Proteomics Data.
 PhD Thesis, University of Melbourne.
 \url{http://hdl.handle.net/11343/351600}
+
+Li M, Cobbold SA, Smyth GK (2025).
+Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
+\emph{bioRxiv} 2025/651125.
+\doi{10.1101/2025.04.28.651125}
 }
 
 \seealso{
-  \code{voomaLmFit}
+  \code{\link{voomaLmFitWithImputation}}. Also \code{voomaLmFit} in the limma package.
 }
 
 \examples{

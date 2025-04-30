@@ -93,6 +93,11 @@ Linear Models and Empirical Bayes Methods for Mass Spectrometry-based Proteomics
 PhD Thesis, University of Melbourne.
 \url{http://hdl.handle.net/11343/351600}
 
+Li M, Cobbold SA, Smyth GK (2025).
+Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
+\emph{bioRxiv} 2025/651125.
+\doi{10.1101/2025.04.28.651125}
+
 Smyth GK (2005).
 Optimization and nonlinear equations.
 In: \emph{Encyclopedia of Biostatistics Second Edition}, Volume 6, P. Armitage and T. Colton (eds.), Wiley, London, pages 3857-3863.
