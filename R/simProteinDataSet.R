@@ -1,9 +1,9 @@
 simProteinDataSet <- function(n.peptides=100, n.groups=2, samples.per.group=5, peptides.per.protein=4, mu.range=c(2,10), sigma=0.4, prop.de=0.2, fc=2, dpc.intercept=NULL, dpc.slope=0.7, prop.missing=0.4)
 # Simulate peptide data with missing values.
-# Created 20 Dec 2024. Last modified 1 Jan 2025.
+# Created 20 Dec 2024. Last modified 26 May 2025.
 {
 # Setup peptide-wise mu and sigma
-  mu <- seq(from=2, to=10, length.out=n.peptides)
+  mu <- seq(from=mu.range[1], to=mu.range[2], length.out=n.peptides)
   sigma <- rep(0.6, n.peptides)
 
 # Choose dpc intercept to give roughly the required proportion of NAs
@@ -11,6 +11,12 @@ simProteinDataSet <- function(n.peptides=100, n.groups=2, samples.per.group=5, p
     mean.mu <- mean(mu.range)
     eta.prop.missing <- qlogis(prop.missing, lower.tail=FALSE)
     dpc.intercept <- eta.prop.missing - dpc.slope * mean.mu
+#   Two Newton iterations polish
+    gq <- gauss.quad.prob(16,l=mu.range[1],u=mu.range[2])
+    eta <- dpc.intercept + dpc.slope * gq$nodes
+    dpc.intercept <- dpc.intercept - (sum(gq$weights*plogis(eta)) - (1-prop.missing) ) / sum(gq$weights*dlogis(eta))
+    eta <- dpc.intercept + dpc.slope * gq$nodes
+    dpc.intercept <- dpc.intercept - (sum(gq$weights*plogis(eta)) - (1-prop.missing) ) / sum(gq$weights*dlogis(eta))
   }
 
 # Generate y

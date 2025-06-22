@@ -47,6 +47,7 @@ dpcImpute.EList <- function(y, dpc=NULL, dpc.slope=0.8, verbose=TRUE, chunk=1000
   if(!is.null(y$genes)) y.protein$genes <- data.frame(y$genes,y.protein$genes)
 
 # Output
+  rownames(y.protein) <- rownames(y)
   y.protein$targets <- y$targets
   y.protein$dpc <- dpc
   y.protein

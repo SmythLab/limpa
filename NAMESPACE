@@ -11,7 +11,7 @@ importFrom("statmod", "gauss.quad.prob", "logmdigamma")
 importFrom("limma", "plotMDS", "squeezeVar")
 
 # Extra imports for voomaLmFitWithImputation
-importFrom("stats", "approxfun", "hat", "lowess", "median")
+importFrom("stats", "approxfun", "hat", "lowess", "median", "runif")
 importFrom("graphics", "title")
 importFrom("limma", "arrayWeights", "asMatrixWeights", "chooseLowessSpan", "duplicateCorrelation",
            "loessFit", "lmFit")
@@ -34,5 +34,7 @@ S3method(filterSingletonPeptides,EListRaw)
 S3method(imputeByExpTilt,default)
 S3method(imputeByExpTilt,EList)
 S3method(imputeByExpTilt,EListRaw)
+S3method(plotPeptides,default)
+S3method(plotPeptides,EList)
 S3method(removeNARows,default)
 S3method(removeNARows,EList)

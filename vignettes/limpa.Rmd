@@ -1,7 +1,7 @@
 ---
 title: Analyzing mass spectrometry data with limpa
 author: "Mengbo Li and Gordon K. Smyth"
-date: "First version 30 December 2024, Last revised 30 April 2025"
+date: "First version 30 December 2024, Last revised 22 June 2025"
 abstract: >
   Mass spectrometry is a powerful tool in biomedical research. 
   Advancements in label-free methods and MS instruments have enabled high-throughput proteomics profiling of biological samples with the increasingly deeper coverage of the proteome, but missing values are still ubiquitous in MS-based proteomics data.
@@ -43,6 +43,17 @@ Peptide quantifications typically include missing values for some samples, which
 The missing values can't just be ignored, because they occur more often at low intensities, and missing value imputation also introduces biases and problems.
 limpa uses statistical models developed by Li & Smyth (2023) to evaluate how much information can be recovered from the missing values, quantifying the overall missing value "mechanism" into a detection probability curve (DPC).
 limpa uses the DPC, together with a Bayesian model, to summarize the peptide quantifications into protein-level quantifications and to undertake limma-based differential expression analyses (Li 2024, Ritchie et al 2015).
+
+# How to get help
+
+Any questions about limpa can be sent to the [Bioconductor support forum](https://support.bioconductor.org).
+
+# How to cite
+
+Li M, Cobbold SA, Smyth GK (2025).
+Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
+*bioRxiv* 2025/651125.
+[doi:10.1101/2025.04.28.651125](https://doi.org/10.1101/2025.04.28.651125)
 
 # Quick start
 
@@ -213,6 +224,14 @@ A multivariate normal prior is also applied to the protein log-expression values
 DPC-Quant maximizes the log-posterior with respect to the $\gamma_i$s and $\delta_j$s, and the final $\gamma_i$s become the protein quantifications.
 DPC-Quant also returns the posterior standard error with which each log-expression value is estimated.
 
+# Quantifying every row: protein-level data or post-translational modifications
+
+For some proteomics applications, we want to undertake quantification and differential expression analysis for every row of data instead of summarizing multiple rows into proteins.
+This can arise in the study of post-translational modifications, where rows correspond to distinct modifications.
+It can also arise when the analyst only has access to data such as LFQ values that has already been summarized at the protein level, including missing values.
+To impute and quantify on a rowwise base, use the `dpcImpute` function instead of `dpcQuant`.
+The input is similar as for `dpcQuant` except there is no need to specify protein IDs.
+
 # Differential expression
 
 Finally, the protein log2-expression values and associated uncertainties are passed to the `voomaLmFitWithImputation` function, which computes precision weights for each observation and fits proteinwise linear models.
@@ -227,16 +246,10 @@ The `dpcDE()` function accepts any argument that `voomaLmFitWithImputation` (or 
 For example, `dpcDE(y.protein, design, sample.weights=TRUE)` can be used to downweight outlier samples.
 Or `dpc(y.protein, design, block=subject)` could be used to model the correlation between repeated observations on the same subject.
 
-# How to get help
+# Very large datasets
+`dpcQuant()` will be relatively slow, taking several hours, for very large datasets with thousands of samples.
+For large datasets, very fast imputation at the row level can be done by `imputeByExpTilt()`, although this method does not provide standard errors to quantify precision.
 
-Any questions about limpa can be sent to the [Bioconductor support forum](https://support.bioconductor.org).
-
-# How to cite
-
-Li M, Cobbold SA, Smyth GK (2025).
-Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
-*bioRxiv* 2025/651125.
-[doi:10.1101/2025.04.28.651125](https://doi.org/10.1101/2025.04.28.651125)
 
 # Funding
 

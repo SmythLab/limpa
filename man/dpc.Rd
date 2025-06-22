@@ -4,7 +4,7 @@
 
 \description{
 Detection probability curve for label free shotgun proteomics data
-assuming observed normal intensities.
+assuming observed normal log-intensities.
 }
 
 \usage{
@@ -19,7 +19,7 @@ dpc(y, maxit = 100, eps = 1e-04, b1.upper = 1)
   }
   \item{maxit}{maximum number of iterations.}
   \item{eps}{convergence tolerance.}
-  \item{b1.upper}{upper bound for beta1.}
+  \item{b1.upper}{upper bound for the DPC slope.}
 }
 
 \details{
@@ -37,7 +37,7 @@ A list with components
   \item{mu.prior}{prior value for row-wise means for observed values.}
   \item{n.prior}{precision of prior for row-wise means, expressed as effective number of observations.}
   \item{s2.prior}{prior value for row-wise variances for observed values.}
-  \item{df.prior}{precision of prior for row-wise variances, expressed as effective degrees of freedom.}
+  \item{df.prior}{precision of prior for row-wise variances, expressed as prior degrees of freedom.}
   \item{mu.obs}{posterior row-wise means for observed values.}
   \item{s2.obs}{posterior row-wise variances for observed values.}
   \item{mu.mis}{posterior row-wise means for values that are missing.}

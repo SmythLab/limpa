@@ -5,7 +5,7 @@
 \alias{dpcImpute}
 \alias{dpcImpute.default}
 \alias{dpcImpute.EList}
-\title{Quantify Proteins}
+\title{Quantify Proteins Using the DPC}
 
 \description{
 Use the DPC to quantify protein expression values.

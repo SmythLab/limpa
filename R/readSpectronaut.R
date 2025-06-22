@@ -32,7 +32,7 @@ readSpectronaut <- function(
 
   # Filter by imputed
   if ("EG.IsImputed" %in% colnames(Report)) {
-    message("Filtering out imputed values accouding to `EG.IsImputed`.")
+    message("Filtering out imputed values according to `EG.IsImputed`.")
     Report <- Report[Report$EG.IsImputed == FALSE, ]
   }
 

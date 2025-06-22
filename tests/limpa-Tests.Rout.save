@@ -1,5 +1,5 @@
 
-R version 4.5.0 alpha (2025-03-18 r87998 ucrt)
+R version 4.5.0 (2025-04-11 ucrt) -- "How About a Twenty-Six"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -26,18 +26,18 @@ Loading required package: limma
 [1] "E"       "genes"   "targets" "other"  
 > colSums(is.na(y.peptide$E))
  S1  S2  S3  S4  S5  S6  S7  S8  S9 S10 
- 40  53  45  39  44  42  41  48  38  47 
+ 35  48  43  36  44  44  38  41  35  47 
 > summary(y.peptide$E[,1])
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-  2.160   5.695   7.142   6.868   8.587   9.717      40 
+  2.160   5.548   7.025   6.711   8.586   9.717      35 
 > names(y.peptide)
 [1] "E"       "genes"   "targets" "other"  
 > 
 > dpcfit <- dpc(y.peptide)
-2 peptides are completely missing in all samples.
+1 peptides are completely missing in all samples.
 > dpcfit$dpc
      beta0      beta1 
--4.2779693  0.7787527 
+-4.2061461  0.8003111 
 > 
 > y.protein <- dpcQuant(y.peptide,protein.id="Protein",dpcfit)
 Estimating hyperparameters ...
@@ -45,23 +45,23 @@ Quantifying proteins ...
 Proteins: 25 Peptides: 100
 > summary(y.protein$E[,1])
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  2.585   4.252   5.929   5.997   7.828   9.117 
+  2.601   4.097   5.933   5.980   7.824   9.118 
 > 
 > Group <- factor(y.peptide$targets$Group)
 > design <- model.matrix(~Group)
 > fit <- dpcDE(y.protein, design, plot=FALSE)
 > summary(fit$coefficients)
   (Intercept)        Group2        
- Min.   :1.646   Min.   :-1.19082  
- 1st Qu.:3.935   1st Qu.:-0.19334  
- Median :5.807   Median :-0.08129  
- Mean   :5.840   Mean   : 0.01623  
- 3rd Qu.:7.993   3rd Qu.: 0.16887  
- Max.   :9.398   Max.   : 1.11169  
+ Min.   :1.933   Min.   :-1.08953  
+ 1st Qu.:3.701   1st Qu.:-0.16402  
+ Median :5.845   Median :-0.07588  
+ Mean   :5.843   Mean   : 0.04373  
+ 3rd Qu.:7.990   3rd Qu.: 0.24114  
+ Max.   :9.427   Max.   : 1.11731  
 > summary(fit$sigma)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.3656  0.8701  0.9755  0.9979  1.1433  1.6496 
+ 0.3688  0.8261  0.9631  0.9871  1.1006  1.8352 
 > 
 > proc.time()
    user  system elapsed 
-   0.32    0.15    0.51 
+   0.34    0.10    0.54 

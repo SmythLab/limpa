@@ -1,15 +1,31 @@
-dpcCN <- function(y, dpc.start=c(-4,0.7), iterations=3L, verbose=TRUE)
+dpcCN <- function(y, dpc.slope.start=0.7, dpc.start=NULL, iterations=2L, subset=1000L, verbose=TRUE)
 # MLE for DPC curve assuming complete normal model.
-# Created 14 Dec 2024. Last modified 31 Dec 2024.
+# Created 14 Dec 2024. Last modified 20 Jun 2025.
 {
 # Check y
   y <- as.matrix(y)
   npeptides <- nrow(y)
   nsamples <- ncol(y)
+  if(npeptides < 3) stop("Too few rows of data")
+  if(nsamples < 2) stop("Too few samples")
+
+# Subset large datasets
+  if(npeptides > subset) {
+    set.seed(20250620)
+    invisible(runif(100))
+    i <- sample.int(npeptides, subset)
+    y <- y[i,]
+    npeptides <- subset
+  }
 
 # DPC
-  beta0 <- dpc.start[1]
-  beta1 <- dpc.start[2]
+  if(is.null(dpc.start)) {
+    beta1 <- dpc.slope.start
+    beta0 <- estimateDPCIntercept(y,dpc.slope=beta1)
+  } else {
+    beta0 <- dpc.start[1]
+    beta1 <- dpc.start[2]
+  }
 
 # Remove rows that are entirely missing
 #  y <- y[rowSums(is.na(y)) < nsamples,,drop=FALSE]
@@ -73,18 +89,19 @@ dpcCN <- function(y, dpc.start=c(-4,0.7), iterations=3L, verbose=TRUE)
   mu <- rowMeans(y.impute)
   sigma <- sqrt(rowSums((y.impute-mu)^2)/(nsamples-1))
 
+# Prior distribution
+  mu.mean <- mean(mu)
+  mu.sd <- sd(mu)
+  logsigma <- log(sigma+0.001)
+  logsigma.mean <- mean(logsigma)
+  logsigma.sd <- sd(logsigma)
+
 # Main iteration
   for (iter in seq_len(iterations)) {
     if(verbose) message("Iter ",iter,": ",appendLF=FALSE)
 
 #   Estimate mu and sigma for each peptide
     for (i in seq_len(npeptides)) {
-#     Prior distributions
-      mu.mean <- mean(mu)
-      mu.sd <- sd(mu)
-      logsigma <- log(sigma+0.001)
-      logsigma.mean <- mean(logsigma)
-      logsigma.sd <- sd(logsigma)
 #     Maximize posterior
       out <- .estimateMuSigmaForOnePeptide(y[i,],dpc=c(beta0,beta1),mu.start=mu[i],sigma.start=sigma[i],mu.mean=mu.mean,mu.sd=mu.sd,logsigma.mean=logsigma.mean,logsigma.sd=logsigma.sd)
       mu[i] <- out$mu

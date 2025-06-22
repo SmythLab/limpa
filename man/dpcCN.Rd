@@ -8,14 +8,16 @@ assuming a complete normal model for the peptide intensities.
 }
 
 \usage{
-dpcCN(y, dpc.start= c(-4,0.7), iterations = 3, verbose = TRUE)
+dpcCN(y, dpc.slope.start = 0.7, dpc.start = NULL, iterations = 2, subset = 1000, verbose = TRUE)
 }
 
 \arguments{
   \item{y}{numeric matrix of log2-intensities.
     Rows correspond to peptide precursors and columns to samples.}
-  \item{dpc.start}{numeric vector of length 2 giving starting estimates for the DPC intercept and slope.}
+  \item{dpc.slope.start}{starting value for the DPC slope.}
+  \item{dpc.start}{numeric vector of length 2 giving starting values for the DPC intercept and slope.}
   \item{iterations}{number of outer iterations.}
+  \item{subset}{maximum number of randomly selected rows of \code{y} to use in the calculation.}
   \item{verbose}{if \code{TRUE}, then progress information will be printed from each iteration.}
 }
 

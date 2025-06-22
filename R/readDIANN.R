@@ -1,19 +1,18 @@
 readDIANN <- function(file="Report.tsv", path=NULL, format = "tsv", sep="\t", log=TRUE, q.columns = c("Global.Q.Value", "Lib.Q.Value"), q.cutoffs = c(0.01, 0.01))
-  # Read Report.tsv from DIA-NN output
-  # Gordon Smyth and Mengbo Li
-  # Created 3 July 2023. Last modified 3 March 2025.
+# Read Report.tsv from DIA-NN output
+# Gordon Smyth and Mengbo Li
+# Created 3 July 2023. Last modified 12 June 2025.
 {
-  # Read DIA-NN report file
+  # Check arguments
   if (!is.null(path)) file <- file.path(path, file)
   Select <- c("Run", "Protein.Group", "Protein.Names", "Genes", "Precursor.Id", "Proteotypic", "Precursor.Normalised", q.columns)
   format <- match.arg(format, choices = c("tsv", "parquet"))
 
+  # Read DIA-NN report file
   if (identical(format, "tsv")) {
     Report <- fread(file, sep = "\t", select = Select)
-  }
-  
-  #	Use arrow package for reading
-  if (identical(format, "parquet")) {
+  } else {
+  #	Use arrow package to read Parquet format file
     suppressPackageStartupMessages(OK <- requireNamespace("arrow",quietly = TRUE))
 	  if(!OK) stop("arrow package required but is not installed (or can't be loaded)")
     Report <- arrow::read_parquet(file)
@@ -28,7 +27,7 @@ readDIANN <- function(file="Report.tsv", path=NULL, format = "tsv", sep="\t", lo
     }
     kp <- rep_len(TRUE, nrow(Report))
     for (qcol in seq_along(q.columns)) {
-      kp <- kp & Report[[q.columns[qcol]]] <= q.cutoffs[qcol]
+      kp[ Report[[ q.columns[qcol] ]] > q.cutoffs[qcol] ] <- FALSE
     }
     Report <- Report[kp, ]
   }
