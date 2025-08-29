@@ -8,15 +8,35 @@ peptides2ProteinBFGS <- function(y, sigma=0.5, weights=NULL, dpc=c(-4,0.7), prio
 # Input:
 # y: numeric matrix of log-intensities, rows are peptides, columns are samples
 # sigma: complete data residual standard deviation for the additive linear model
-# Created 5 June 2023. Last modified 1 Jan 2025.
+# Created 5 June 2023. Last modified 25 Jun 2025.
 {
+# log-intensities
+  npeptides <- nrow(y)
+  nsamples <- ncol(y)
+
+# Check weights
+  if(is.null(weights)) {
+    weights <- matrix(1,npeptides,nsamples)
+  } else {
+    if(!identical(dim(y),dim(weights))) stop("weights must be conformal with y")
+    if(min(weights) < 1e-15) stop("weights must be positive")
+  }
+
+# Consolidate entirely NA rows
+  AllNA <- which(rowSums(is.na(y))==nsamples)
+  if(length(AllNA) > 1L) {
+    y <- y[-AllNA[-1],,drop=FALSE]
+    weights[AllNA[1],] <- colSums(weights[AllNA,])
+    weights <- weights[-AllNA[-1],,drop=FALSE]
+    if(!is.null(start)) start <- start[-(nsamples-1+AllNA[-1])]
+    npeptides <- npeptides +1L - length(AllNA)
+  }
+
 # DPC parameters
   dpc.intercept <- dpc[1]
   dpc.slope <- dpc[2]
 
 # Additive model for peptides and samples
-  npeptides <- nrow(y)
-  nsamples <- ncol(y)
   i1n <- seq_len(nsamples)
   Samples <- factor(rep.int(i1n,rep.int(npeptides,nsamples)))
   if(npeptides > 1L) {
@@ -28,14 +48,6 @@ peptides2ProteinBFGS <- function(y, sigma=0.5, weights=NULL, dpc=c(-4,0.7), prio
   }
   N <- nrow(X)
   nbeta <- ncol(X)
-
-# Check weights
-  if(is.null(weights)) {
-    weights <- matrix(1,npeptides,nsamples)
-  } else {
-    if(!identical(dim(y),dim(weights))) stop("weights must be conformal with y")
-    if(min(weights) < 1e-15) stop("weights must be positive")
-  }
 
 # Starting values
   if(is.null(start)) {
@@ -163,9 +175,17 @@ peptides2ProteinBFGS <- function(y, sigma=0.5, weights=NULL, dpc=c(-4,0.7), prio
     D2Q <- 2*D2Q
     out$hessian <- D2Q
 
+#   Invert D2Q with error catching
+    tryCatch(Qinv <- chol2inv(chol(D2Q)), error=function(e) {
+      warning("Hessian not invertible at first try.")
+      eps <- max(diag(D2Q)) * 1e-8
+      eps <- rep(c(0,eps),c(nsamples,npeptides-1))
+      diag(D2Q) <- diag(D2Q) + eps
+      Qinv <- chol2inv(chol(D2Q))
+    })
+
 #   Use D2Q and DQ to undertake one Newton iteration for almost no cost
     if(newton.polish) {
-      Qinv <- chol2inv(chol(D2Q))
       beta <- beta - Qinv %*% DQ
       out$protein.expression <- beta[i1n]
       names(out$protein.expression) <- SampleNames
@@ -175,7 +195,7 @@ peptides2ProteinBFGS <- function(y, sigma=0.5, weights=NULL, dpc=c(-4,0.7), prio
       out$value.bfgs <- out$value
       out$value <- minusLogPosterior(beta)
     } else {
-      out$standard.error <- sqrt(2*diag(chol2inv(chol(D2Q)))[i1n])
+      out$standard.error <- sqrt(2*diag(Qinv)[i1n])
     }
   }
 

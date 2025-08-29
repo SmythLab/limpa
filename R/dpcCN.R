@@ -1,6 +1,6 @@
 dpcCN <- function(y, dpc.slope.start=0.7, dpc.start=NULL, iterations=2L, subset=1000L, verbose=TRUE)
 # MLE for DPC curve assuming complete normal model.
-# Created 14 Dec 2024. Last modified 20 Jun 2025.
+# Created 14 Dec 2024. Last modified 23 Jun 2025.
 {
 # Check y
   y <- as.matrix(y)
@@ -118,7 +118,8 @@ dpcCN <- function(y, dpc.slope.start=0.7, dpc.start=NULL, iterations=2L, subset=
 
 # Output
   out <- list()
-  out$dpc <- c(beta0=beta0,beta1=beta1)
+  out$dpc <- c(beta0, beta1)
+  names(out$dpc) <- c("beta0", "beta1")
   out$mu <- mu
   out$sigma <- sigma
   out$n.detected <- rowSums(!is.na(y))
@@ -231,5 +232,6 @@ dpcCN <- function(y, dpc.slope.start=0.7, dpc.start=NULL, iterations=2L, subset=
   out$mu <- out$par[1]
   out$sigma <- exp(out$par[2])
   out$deriv <- dMinusLogPosterior(out$par)
+  out$model <- "CN"
   out
 }

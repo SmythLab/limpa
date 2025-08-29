@@ -7,7 +7,7 @@ Estimate the DPC intercept given a value for the slope.
 }
 
 \usage{
-estimateDPCIntercept(y, dpc.slope = 0.8, trace = FALSE)
+estimateDPCIntercept(y, dpc.slope = 0.8, verbose = FALSE)
 }
 
 \arguments{
@@ -15,7 +15,7 @@ estimateDPCIntercept(y, dpc.slope = 0.8, trace = FALSE)
     Includes NAs.
     Rows correspond to peptide precursors and columns to samples.}
   \item{dpc.slope}{DPC slope.}
-  \item{trace}{if \code{TRUE}, then progress information will be printed from each glm iteration.}
+  \item{verbose}{if \code{TRUE}, then progress information will be printed from each glm iteration.}
 }
 
 \details{

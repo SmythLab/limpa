@@ -1,5 +1,6 @@
 \name{dpc}
 \alias{dpc}
+\alias{dpcON}
 \title{Detection Probability Curve Assuming Observed Normal Model}
 
 \description{
@@ -9,6 +10,7 @@ assuming observed normal log-intensities.
 
 \usage{
 dpc(y, maxit = 100, eps = 1e-04, b1.upper = 1)
+dpcON(y, dpc.start = NULL, dpc.slope.start = 0.7, robust = FALSE, verbose = FALSE)
 }
 
 \arguments{
@@ -20,6 +22,10 @@ dpc(y, maxit = 100, eps = 1e-04, b1.upper = 1)
   \item{maxit}{maximum number of iterations.}
   \item{eps}{convergence tolerance.}
   \item{b1.upper}{upper bound for the DPC slope.}
+  \item{dpc.start}{numeric vector of length 2 giving starting values for the DPC intercept and slope.}
+  \item{dpc.slope.start}{starting value for DPC slope.}
+  \item{robust}{if \code{TRUE}, outlier rows will be downweighted to produce a robust DPC estimate.}
+  \item{verbose}{if \code{TRUE}, successive estimates will be printed to standard output.}
 }
 
 \details{
@@ -41,6 +47,8 @@ A list with components
   \item{mu.obs}{posterior row-wise means for observed values.}
   \item{s2.obs}{posterior row-wise variances for observed values.}
   \item{mu.mis}{posterior row-wise means for values that are missing.}
+  \item{neg.loglik}{minus twice the maximized log-likelihood.}
+  \item{model}{equal to \code{"ON"}.}
 }
 
 \references{

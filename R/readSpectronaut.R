@@ -14,7 +14,7 @@ readSpectronaut <- function(
   if (!is.null(path)) file <- file.path(path, file)
 
   # Read column names
-  all.columns <- fread(file, sep = "\t", nrows = 0L)
+  all.columns <- fread(file, sep = sep, nrows = 0L)
   all.columns <- colnames(all.columns)
 
   Select <- c(run.column, precursor.column, qty.column, q.columns, extra.columns)
@@ -25,7 +25,7 @@ readSpectronaut <- function(
   }
   Select <- intersect(Select, all.columns)
   extra.columns <- intersect(extra.columns, all.columns)
-  Report <- fread(file, sep = "\t", select = Select)
+  Report <- fread(file, sep = sep, select = Select)
   colnames(Report)[which(colnames(Report) == run.column)] <- "Run"
   colnames(Report)[which(colnames(Report) == precursor.column)] <- "Precursor.Id"
   colnames(Report)[which(colnames(Report) == qty.column)] <- "Intensity"

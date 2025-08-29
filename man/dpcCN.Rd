@@ -45,6 +45,7 @@ A list with components
   \item{dpc}{numeric vector of length 2 giving estimated DPC coefficients.}
   \item{mu}{numeric vector of length \code{nrow(y)} giving estimated complete data row-wise means.}
   \item{sigma}{numeric vector of length \code{nrow(y)} giving estimated complete data row-wise standard deviations.}
+  \item{model}{equal to \code{"CN"}.}
 }
 
 \references{

@@ -1,6 +1,6 @@
 fitZTLogit <- function(n.successes, n.trials, X=NULL, capped=FALSE, beta.start=NULL, alpha.start=0.95)
 # Fit capped logit regression to zero-truncated binomial data
-# Created 22 Aug 2023. Last modified 21 Dec 2024.
+# Created 22 Aug 2023. Last modified 23 Jun 2025.
 {
 # Check X matrix
   if(is.null(X)) X <- matrix(1,length(n.successes),1)
@@ -19,8 +19,7 @@ fitZTLogit <- function(n.successes, n.trials, X=NULL, capped=FALSE, beta.start=N
   } else {
     M2LL <- function(theta) {
       eta <- X %*% theta
-      p <- plogis(eta)
-      -2*sum(dztbinom(n.successes,n.trials,prob=p,log=TRUE))
+      -2*sum(dztbinom(n.successes,n.trials,prob=eta,log=TRUE,logit.p=TRUE))
     }
   }
 
@@ -41,7 +40,8 @@ fitZTLogit <- function(n.successes, n.trials, X=NULL, capped=FALSE, beta.start=N
     derivM2LL <- function(theta) {
       eta <- X %*% theta
       p <- plogis(eta)
-      deriv.p <- (n.successes - n.trials*p) / (p*(1-p))
+      p1p <- exp(plogis(eta,lower.tail=TRUE,log.p=TRUE) + plogis(eta,lower.tail=FALSE,log.p=TRUE))
+      deriv.p <- (n.successes - n.trials*p) / p1p
       deriv.p <- deriv.p - dbeta(p,1,n.trials) / pbeta(p,1,n.trials)
       -2 * (t(X) %*% (deriv.p * dlogis(eta)))
     }

@@ -8,7 +8,7 @@ plotDPC <- function(dpcfit,
 # Plot detection probability curve (DPC) produced by dpc().
 # Mengbo Li
 # Created 16 May 2022 as part of protDP package.
-# Migrated to limpa 11 Sept 2024. Last modified 15 Jan 2025.
+# Migrated to limpa 11 Sept 2024. Last modified 23 Jun 2025.
 {
   if ("dpc.start" %in% names(dpcfit)) {
     # NN
