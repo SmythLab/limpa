@@ -8,7 +8,7 @@ readDIANN <- function(
   )
 # Read Report.tsv from DIA-NN output
 # Gordon Smyth and Mengbo Li
-# Created 3 July 2023. Last modified 19 August 2025.
+# Created 3 July 2023. Last modified 2 September 2025.
 {
   # Check arguments
   if (!is.null(path)) file <- file.path(path, file)
@@ -64,7 +64,7 @@ readDIANN <- function(
   
   # Precursor annotation in wide format
   d <- duplicated(Report$Precursor.Id)
-  Genes <- data.frame(Report[!d, extra.columns])
+  Genes <- data.frame(Report[!d, ..extra.columns])
   row.names(Genes) <- Precursors
   
   # Output either unlogged EListRaw (with zeros) or logged Elist (with NAs)
