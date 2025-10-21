@@ -73,3 +73,5 @@ PhD Thesis, University of Melbourne.
 \seealso{
 \code{\link{dpcQuant}}, \code{\link{imputeByExpTilt}}
 }
+
+\concept{Quantification}

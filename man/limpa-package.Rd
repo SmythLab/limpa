@@ -41,7 +41,12 @@ PhD Thesis, University of Melbourne.
 Li M, Smyth GK (2023).
 Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics.
 \emph{Bioinformatics} 39(5), btad200.
-\url{10.1093/bioinformatics/btad200}
-)}
+\doi{10.1093/bioinformatics/btad200}
+
+Li M, Cobbold SA, Smyth GK (2025).
+Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
+\emph{bioRxiv} 2025/651125.
+\doi{10.1101/2025.04.28.651125}
+}
 
 \concept{Documentation}

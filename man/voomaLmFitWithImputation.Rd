@@ -141,7 +141,7 @@ No counts, no variance: allowing for loss of degrees of freedom when assessing b
 }
 
 \seealso{
-\code{\link{vooma}}, \code{\link{lmFit}}, \code{voomLmFit} (in the edgeR package).
+\code{\link[limma]{vooma}}, \code{\link[limma]{lmFit}}, \code{voomLmFit} (in the edgeR package).
 }
 
 \examples{

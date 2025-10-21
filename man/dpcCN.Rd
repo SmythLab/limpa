@@ -8,7 +8,10 @@ assuming a complete normal model for the peptide intensities.
 }
 
 \usage{
-dpcCN(y, dpc.slope.start = 0.7, dpc.start = NULL, iterations = 2, subset = 1000, verbose = TRUE)
+dpcCN(
+  y, dpc.slope.start = 0.7, dpc.start = NULL, 
+  iterations = 2, subset = 1000, verbose = TRUE
+)
 }
 
 \arguments{
@@ -80,3 +83,5 @@ y <- simProteinDataSet(n.peptides=100, n.groups=1)
 out <- dpcCN(y)
 out$dpc
 }
+
+\concept{Detection probability curve}

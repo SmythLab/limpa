@@ -1,5 +1,7 @@
 readDIANN <- function(
-  file="Report.tsv", path=NULL, format = "tsv", sep="\t", log=TRUE, 
+  file="Report.tsv", path=NULL, 
+  format = "parquet", 
+  sep="\t", log=TRUE, 
   run.column = "Run",
   precursor.column = "Precursor.Id",
   qty.column = "Precursor.Normalised",
@@ -8,7 +10,7 @@ readDIANN <- function(
   )
 # Read Report.tsv from DIA-NN output
 # Gordon Smyth and Mengbo Li
-# Created 3 July 2023. Last modified 2 September 2025.
+# Created 3 July 2023. Last modified 15 October 2025.
 {
   # Check arguments
   if (!is.null(path)) file <- file.path(path, file)
@@ -17,20 +19,21 @@ readDIANN <- function(
 
   # Read DIA-NN report file
   if (identical(format, "tsv")) {
-    Report <- fread(file, sep = "\t", select = Select)
-  } else {
+    Report <- suppressWarnings(fread(file, sep = sep, select = Select, 
+    data.table = FALSE, showProgress = FALSE))
+  } else if (identical(format, "parquet")) {
   #	Use arrow package to read Parquet format file
     suppressPackageStartupMessages(OK <- requireNamespace("arrow",quietly = TRUE))
-	  if(!OK) stop("arrow package required but is not installed (or can't be loaded)")
-    Report <- arrow::read_parquet(file)
+    if(!OK) stop("arrow package required but is not installed (or can't be loaded)")
+    Report <- suppressWarnings(arrow::read_parquet(file))
     Report <- as.data.frame(Report[, Select])
   }
 
   all.columns <- colnames(Report)
   if (any(!(Select %in% all.columns))) {
     no.in.Select <- setdiff(Select, all.columns)
-    message(paste("Columns", paste(no.in.Select, collapse = ","), "not in data!", sep = " "))
-    message("Reading the rest of the columns only.")
+    message(paste("Columns", paste(no.in.Select, collapse = ","), "not found in file.", sep = " "))
+    message("Reading other columns.")
   }
   Select <- intersect(Select, all.columns)
   extra.columns <- intersect(extra.columns, all.columns)
@@ -64,7 +67,8 @@ readDIANN <- function(
   
   # Precursor annotation in wide format
   d <- duplicated(Report$Precursor.Id)
-  Genes <- data.frame(Report[!d, ..extra.columns])
+  Genes <- Report[!d, extra.columns, drop = FALSE]
+  colnames(Genes) <- extra.columns
   row.names(Genes) <- Precursors
   
   # Output either unlogged EListRaw (with zeros) or logged Elist (with NAs)

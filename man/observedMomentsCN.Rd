@@ -30,3 +30,5 @@ A list with compoenents
 \examples{
 observedMomentsCN(mean.comp=6, sd.comp=2)
 }
+
+\concept{Missing value model}

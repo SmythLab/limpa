@@ -52,3 +52,4 @@ y <- simProteinDataSet(n.peptides=10, n.groups=1)
 show(y)
 }
 
+\concept{Simulate data}

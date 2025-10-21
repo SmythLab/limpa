@@ -8,13 +8,13 @@ readSpectronaut <- function(
 )
 # Read normal table output from Spectronaut.
 # Gordon Smyth and Mengbo Li
-# Created 18 December 2023. Last modified 7 April 2025.
+# Created 18 December 2023. Last modified 10 October 2025.
 {
   # Read Spectronaut report file
   if (!is.null(path)) file <- file.path(path, file)
 
   # Read column names
-  all.columns <- fread(file, sep = sep, nrows = 0L)
+  all.columns <- fread(file, sep = sep, nrows = 0L, showProgress = FALSE)
   all.columns <- colnames(all.columns)
 
   Select <- c(run.column, precursor.column, qty.column, q.columns, extra.columns)
@@ -25,7 +25,8 @@ readSpectronaut <- function(
   }
   Select <- intersect(Select, all.columns)
   extra.columns <- intersect(extra.columns, all.columns)
-  Report <- fread(file, sep = sep, select = Select)
+  Report <- fread(file, sep = sep, select = Select, 
+  data.table = FALSE, showProgress = FALSE)
   colnames(Report)[which(colnames(Report) == run.column)] <- "Run"
   colnames(Report)[which(colnames(Report) == precursor.column)] <- "Precursor.Id"
   colnames(Report)[which(colnames(Report) == qty.column)] <- "Intensity"
@@ -64,7 +65,7 @@ readSpectronaut <- function(
 
   # Precursor annotation in wide format
   d <- duplicated(Report$Precursor.Id)
-  Genes <- data.frame(Report[!d, ])[, setdiff(extra.columns, "EG.IsImputed")]
+  Genes <- data.frame(Report[!d, ])[, setdiff(extra.columns, "EG.IsImputed"), drop = FALSE]
   row.names(Genes) <- Precursors
 
   # Output either unlogged EListRaw (with zeros) or logged Elist (with NAs)
@@ -73,7 +74,7 @@ readSpectronaut <- function(
   # Remove rows that are missing in all samples
     ind <- rowMeans(is.na(y)) < 1
     y <- y[ind, , drop = FALSE]
-    Genes <- Genes[ind, ]
+    Genes <- Genes[ind, , drop = FALSE]
   # Log
     y <- log2(y)
     new("EList", list(E = y, genes = Genes))

@@ -24,14 +24,14 @@ readSpectronaut(
   \item{run.column}{column containing run. String of length 1L.}
   \item{precursor.column}{column containing precursor IDs. String of length 1L.}
   \item{qty.column}{column containing intensities. String of length 1L.}
-  \item{q.columns}{column headings in the Spectronaut output containing Q-values for peptide identification. Character vector.}
-  \item{q.cutoffs}{cutoffs to apply to the Q-value columns. Only peptides with values below the cutoffs will be retained. Numeric vector of same length as \code{q.columns}.}
+  \item{q.columns}{column headings in the Spectronaut output containing q-values for peptide identification. Character vector.}
+  \item{q.cutoffs}{cutoffs to apply to the q-value columns. Only peptides with values below the cutoffs will be retained. Numeric vector of same length as \code{q.columns}.}
   \item{extra.columns}{extra columns that are appended to the precursor annotation matrix.}
 }
 
 \details{
 Spectronaut (https://biognosys.com/software/spectronaut/) writes a file in long (data.frame) format, typically called \code{Report.tsv}, containing normalized intensities for peptide precursors.
-\code{readSpectronaut} reads this file and produces an object in limma EList or EListRaw format.
+\code{readSpectronaut} reads this file and produces an EList or EListRaw object.
 }
 
 \value{
@@ -41,6 +41,10 @@ Rows are peptide-precursors and columns are samples.
 Peptide precursor and protein annotation is stored in the \code{genes} output component.
 }
 
+\seealso{
+\code{\link{EList-class}}.
+}
+
 \examples{
 \dontrun{
 y <- readSpectronaut()
@@ -48,4 +52,4 @@ dpcfit <- dpc(y)
 }
 }
 
-\keyword{reading data}
+\concept{Reading data}

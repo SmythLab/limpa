@@ -3,27 +3,33 @@
 \encoding{UTF-8}
 
 
-\section{Version 1.0.6 (2025-06-26)}{\itemize{
+\section{Version 1.2.0 (2025-10-28)}{\itemize{
 \item
-New function dpcON() to estimate the DPC assuming the oberved-normal model.
-Should give same output as dpc() but is somewhat faster.
+New function readFragPipe() to read FragPipe output.
 
 \item
-New function pztbinomSameSizeLogitPBothTails() to compute left and right tail p-values for 
-zero-truncated binomial quantiles.
-}}
+New function readMaxQuant() to read MaxQuant output.
 
-
-\section{Version 1.0.5 (2025-06-22)}{\itemize{
 \item
-New function plotPeptides() to plot the peptide-level log-intensities for one protein.
+readDIANN() now allows user-specified input column names and "parquet" is now the default format.
+
+\item
+Bug fixes to readSpectronaut() when `sep` is other than a tab or 
+when there is only one peptide annotation column.
+
+\item
+Revisions to all the read functions.
+readDIANN(), readFragPipe(), readMaxQuant(), and readSpectronaut() all use `fread()` with `data.table=FALSE` now to read ascii delimited files.
 
 \item
 New argument `logit.p` for dztbinom(), which allows the function to avoid subtractive cancellation for success probabilities close to 1.
 dpc() now uses the new argument when calling dztbinom().
 
 \item
-Set the default value of `b1.upper` back to 1 in dpc().
+New function dpcON() to estimate the DPC assuming the oberved-normal model.
+Should give same output as dpc() but is somewhat faster.
+dpcON() calls a new function, pztbinomSameSizeLogitPBothTails(), which computes left and right tail p-values for 
+zero-truncated binomial quantiles.
 
 \item
 Revisions to dpcCN() to improve convergence.
@@ -31,35 +37,21 @@ To improve speed, the function now randomly selects a subset of rows of data to 
 The default number of outer iterations is decreased to 2.
 
 \item
-Add sections on dpcImpute() and imputeByExpTilt() to the package vignette.
-}}
-
-
-\section{Version 1.0.4 (2025-06-19)}{\itemize{
-\item
-dpcQuant() now calls dpcImpute() automatically if all proteins have just one peptide.
-}}
-
-
-\section{Version 1.0.3 (2025-05-26)}{\itemize{
-\item
-Fix simProteinDataSet() processing of prop.missing.
+dpcImpute() now sets row.names.
+Sections on dpcImpute() and imputeByExpTilt() have been added to the package vignette.
 
 \item
-Increase default value of `b1.upper` to 2 in dpc().
+dpcQuant() now calls dpcImpute() automatically when all proteins have just one peptide.
 
 \item
-Set row.names in dpcImpute().
-}}
+New function plotPeptides() to plot the peptide-level log-intensities for one protein.
 
-
-\section{Version 1.0.2 (2025-04-30)}{\itemize{
 \item
-Cite Li et al (bioRxiv 2025)
-}}
+Fix simProteinDataSet() processing of `prop.missing` argument.
 
+\item
+Cite the limpa bioRxiv preprint (Li et al, bioRxiv 2025) in the vignette and help pages.
 
-\section{Version 1.0.1 (2025-04-20)}{\itemize{
 \item
 Expand Quantification section in the vignette to give more math details.
 }}

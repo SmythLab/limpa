@@ -110,3 +110,5 @@ y[1:2,1] <- NA
 y[1,2] <- NA
 peptides2ProteinBFGS(y)
 }
+
+\concept{Quantification}

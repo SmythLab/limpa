@@ -32,3 +32,5 @@ y <- simProteinDataSet(n.peptides=100, n.groups=1)
 dpcfit <- dpc(y)
 plotDPC(dpcfit)
 }
+
+\concept{Detection probability curve}

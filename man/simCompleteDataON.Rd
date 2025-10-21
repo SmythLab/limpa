@@ -46,3 +46,6 @@ mean(out$prob.missing)
 qqnorm(out$y.complete)
 qqline(out$y.complete)
 }
+
+\concept{Missing value model}
+\concept{Simulate data}

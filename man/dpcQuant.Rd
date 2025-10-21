@@ -85,10 +85,12 @@ Quantification and differential analysis of mass spectrometry proteomics data wi
 }
 
 \seealso{
-  \code{\link{dpc}}, \code{\link{dpcQuantHyperparam}}, \code{\link{dpcDE}}, \code{\link{EList-class}}.
+  \code{\link{dpc}}, \code{\link{dpcQuantHyperparam}}, \code{\link{dpcDE}}, \code{\link[limma]{EList-class}}.
 }
 
 \examples{
 y.peptide <- simProteinDataSet(n.groups=1,samples.per.group=4,prop.missing=0.2)
 y.protein <- dpcQuant(y.peptide, "Protein", dpc.slope=0.7)
 }
+
+\concept{Quantification}

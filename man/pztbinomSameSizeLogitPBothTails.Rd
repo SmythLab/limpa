@@ -35,4 +35,4 @@ x <- 1:3
 pztbinomSameSizeLogitPBothTails(x, size=3, logit.prob=0)
 }
 
-\keyword{distribution}
+\concept{Zero truncated binomial distribution}

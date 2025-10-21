@@ -45,4 +45,4 @@ pztbinom(x, size=3, prob=0.5)
 pbinom(x, size=3, prob=0.5)
 }
 
-\keyword{distribution}
+\concept{Zero truncated binomial distribution}

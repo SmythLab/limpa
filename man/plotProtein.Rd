@@ -47,3 +47,5 @@ y.protein <- dpcQuant(y.peptide, "Protein", dpc=c(-4,0.7))
 plotProtein(y.protein, protein = "Protein01", col = rep(c("blue", "red"), each = 5))
 y.protein$other$standard.error["Protein01",]
 }
+
+\concept{Plots}

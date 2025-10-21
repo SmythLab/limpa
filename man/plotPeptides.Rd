@@ -57,3 +57,5 @@ The matrix of plotting points is also invisibly returned.
 y.peptide <- simProteinDataSet(20,n.groups=1,samples.per.group=4,peptides.per.protein=4)
 plotPeptides(y.peptide, 9:12)
 }
+
+\concept{Plots}

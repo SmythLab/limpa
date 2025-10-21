@@ -30,3 +30,5 @@ A list with compoenents
 \examples{
 completeMomentsON(mean.obs=6, sd.obs=2)
 }
+
+\concept{Missing value model}

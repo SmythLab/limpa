@@ -49,3 +49,5 @@ y <- matrix(rnorm(25),5,5)
 y[1,1] <- NA
 imputeByExpTilt(y)
 }
+
+\concept{Quantification}

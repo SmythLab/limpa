@@ -1,6 +1,6 @@
 estimateDPCIntercept <- function(y, dpc.slope=0.8, verbose=FALSE)
 # For a preset DPC slope, estimate the intercept that gives the correct proportion of missing values overall.
-# Created 2 Jan 2025. Last modified 28 Jun 2025.
+# Created 2 Jan 2025. Last modified 6 Jul 2025.
 {
   y <- as.matrix(y)
   IsObs <- as.integer(!is.na(y))

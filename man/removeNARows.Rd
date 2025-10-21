@@ -31,3 +31,6 @@ y <- matrix(rnorm(25),5,5)
 y[y < -0.5] <- NA
 removeNARows(y)
 }
+
+\concept{Filter features}
+

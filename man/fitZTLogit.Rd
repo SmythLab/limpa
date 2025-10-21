@@ -65,3 +65,6 @@ p.observed <- n.successes / n.trials
 plot(x, p.observed)
 lines(x, fit$p)
 }
+
+\concept{Zero truncated binomial distribution}
+\concept{Zero truncated binomial distribution}

@@ -55,7 +55,7 @@ A list with components
 Li M, Smyth GK (2023).
 Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics.
 \emph{Bioinformatics} 39(5), btad200.
-\url{10.1093/bioinformatics/btad200}
+\doi{10.1093/bioinformatics/btad200}
 }
 
 \seealso{
@@ -67,3 +67,5 @@ y <- simProteinDataSet(n.peptides=100, n.groups=1)
 out <- dpc(y)
 out$dpc
 }
+
+\concept{Detection probability curve}

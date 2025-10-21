@@ -1,6 +1,6 @@
 dpcON <- function(y, dpc.start=NULL, dpc.slope.start=0.7, robust=FALSE, verbose=FALSE)
 # Estimate detection probability curve (DPC) assuming ON model.
-# Created 22 Jun 2025. Last modified 6 Jul 2025.
+# Created 22 Jun 2025. Last modified 12 Oct 2025.
 {
 # Check y
   y <- as.matrix(y)
@@ -84,6 +84,8 @@ dpcON <- function(y, dpc.start=NULL, dpc.slope.start=0.7, robust=FALSE, verbose=
       b0 <- b0m - b1*mu.obs.mean
       message("Robust dpc = ",format(c(b0,b1)))
     }
+  } else {
+    FDR <- NULL
   }
 
 # Output

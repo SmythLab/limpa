@@ -64,3 +64,5 @@ PhD Thesis, University of Melbourne.
 y <- simProteinDataSet(8, n.groups=1, samples.per.group=4, prop.missing=0)
 proteinResVarFromCompletePeptideData(y$E, y$genes$Protein)
 }
+
+\concept{Quantification}

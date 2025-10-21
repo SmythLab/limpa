@@ -70,4 +70,4 @@ limma powers differential expression analyses for RNA-sequencing and microarray 
 # See dpcQuant()
 }
 
-\concept{plots}
+\concept{Plots}

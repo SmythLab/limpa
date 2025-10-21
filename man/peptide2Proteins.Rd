@@ -80,3 +80,5 @@ Quantification and differential analysis of mass spectrometry proteomics data wi
 y.peptide <- simProteinDataSet(8,n.groups=1,samples.per.group=4,prop.missing=0.2)
 y.protein <- peptides2Proteins(y.peptide$E, y.peptide$genes$Protein)
 }
+
+\concept{Quantification}

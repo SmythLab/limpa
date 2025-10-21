@@ -52,3 +52,5 @@ An object the same as \code{y} but with non-compliant rows removed.
 \seealso{
 \code{\link{readDIANN}}
 }
+
+\concept{Filter features}
