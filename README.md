@@ -1,7 +1,7 @@
 limpa is now available as part of Bioconductor, see: https://bioconductor.org/packages/limpa.
 Please install limpa from Bioconductor, which always has the latest official version.
 
-Documentation vignettes can be viewed from https://smythlab.github.io/limpa/.
+Documentation vignettes showing example limpa analyses can be viewed from https://smythlab.github.io/limpa/.
 
 Questions about limpa can be sent to the Bioconductor support forum at https://support.bioconductor.org.
 
