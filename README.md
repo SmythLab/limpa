@@ -3,7 +3,8 @@ Please install limpa from Bioconductor, which always has the latest official ver
 
 Questions about limpa can be sent to the Bioconductor support forum at https://support.bioconductor.org.
 
-Vignettes and example analyses using limpa:
+This repository is now used to host limpa documentation rather than to distribute code.
+The following vignettes and example analyses using limpa are available:
 
 * [Introduction to limpa](https://smythlab.github.io/limpa/index.html)
 * [Example analysis with DIA-NN output](https://smythlab.github.io/limpa/HYE100-DIANN.html)
