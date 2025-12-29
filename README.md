@@ -8,7 +8,7 @@ The following vignettes and example analyses using limpa are available:
 
 * [Introduction to limpa](https://smythlab.github.io/limpa/index.html)
 * [Example analysis with DIA-NN output](https://smythlab.github.io/limpa/HYE100-DIANN.html)
-* [Example analysis with Spectronaut output](https://smythlab.github.io/limpa/HYE100-DIANN.html)
+* [Example analysis with Spectronaut output](https://smythlab.github.io/limpa/HYE100-Spectronaut.html)
 * [Why limpa is better than imputation: an example where imputation methods fail completely](https://smythlab.github.io/limpa/HYE100-Unbalanced.html)
 
 **References**
