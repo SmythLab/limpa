@@ -755,6 +755,26 @@ This ensures that the repeated values for a particular protein do not bias the v
 With 100s of samples, the dpcQuant() step may take an hour or two on a laptop, but other steps are quite fast.</p>
 <p>With 1000s of samples, we recommend an alternative pipeline using impByExpTilt().</p>
 </div>
+<div id="does-limpa-assume-that-missing-values-are-mar-or-mnar-or-both" class="section level2" number="9">
+<h2><span class="header-section-number">9</span> Does limpa assume that missing values are MAR or MNAR or both?</h2>
+<p>limpa assumes that all missing values are MNAR, for the reasons given in Li &amp; Smyth (2023). The graduated probabilities given by the DPC mean that there no need to make any false dichotomies about types of missing values.</p>
+<p>It is important to note though that the common usage of the terms MAR, MCAR and MNAR in the proteomics literature does not agree with the original definitions of these terms in the statistics literature.
+In statistics, MCAR means that all missing values occur independently with the same probability.
+MAR means that one can put the missing values into known groups and the missing values are MCAR within each group.
+For example, missing values would be MAR if the probability of missingness differed between peptides, but missing values were MCAR for each peptide.</p>
+<p>In statistics, the missing values are MNAR if there is any dependence, no matter how slight, on the underlying intensity.
+Any intensity dependence translates to MNAR.
+In the proteomics literature, however, it seems to use that “MAR” is used whenever there is any random component at all in the missingness, i.e., if missingness is not deterministic, and “MNAR” seems to be used only for censoring situations.
+The statistical definitions are important because they correspond to ignorability, whereas the proteomics usages do not.
+The statistics, MAR or MCAR imply that the missing values can be ignored, whereas ignorability seems to have been not well understood in proteomics.</p>
+<p>Another confusion is that, in statistics, the terms MAR, MCAR, and MNAR do not correspond to physical mechanisms but only to probability distributions.
+For example, if there are both intensity dependent and random physical mechanisms at play, but you don’t know for sure which mechanism caused which missing value then, in statistical terminology, the missing values are all MNAR, because the same unconditional probability distribution (the DPC) applies to all the values.
+The existence of a random but unpredictable missing value mechanism will tend to flatten the trend in the DPC but will not remove it.</p>
+<p>In statistics, one cannot put the missing values into distinct classes (MAR vs MNAR) by examining the pattern of missing of values for each peptide, because missing values will always be randomly distributed between samples if the peptide is non-DE, even if the missing values are MNAR.</p>
+<p>In statistics, MAR does not mean that the missing values should be imputed by an imputation algorithm based on a MAR model. It rather means that there is no need for imputation at all. The missing values can just be ignored.</p>
+<p>The limpa function <code>fitZTLogit()</code> allows one to check whether there are any missing value mechanisms at play that are not intensity dependent, the presence of which would change the asymptotic limit of the DPC.
+So far, we have not found good evidence for non-intensity dependent missing value mechanisms, although more checking will be done as we get more experience with single-cell proteomics.</p>
+</div>
 
 
 
