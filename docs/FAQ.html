@@ -700,44 +700,68 @@ function toggle_visibility(id1) {
 
 
 <h1 class="title toc-ignore">limpa: frequently asked questions</h1>
-<h4 class="date">First version 9 January 2026, Last revised 11 January 2026</h4>
+<h4 class="date">First version 9 January 2026, Last revised 17 January 2026</h4>
 
 </div>
 
+<h1>Contents</h1>
+<div id="TOC">
+<ul>
+<li><a href="#the-dpc-plot-doesnt-look-like-a-good-fit.-can-i-still-go-ahead-with-the-analysis" id="toc-the-dpc-plot-doesnt-look-like-a-good-fit.-can-i-still-go-ahead-with-the-analysis"><span class="toc-section-number">1</span> The DPC plot doesn’t look like a good fit. Can I still go ahead with the analysis?</a></li>
+<li><a href="#can-limpa-be-used-for-phosphoproteomics-or-to-analyse-other-post-translational-modifications-ptms" id="toc-can-limpa-be-used-for-phosphoproteomics-or-to-analyse-other-post-translational-modifications-ptms"><span class="toc-section-number">2</span> Can limpa be used for phosphoproteomics or to analyse other post-translational modifications (PTMs)?</a></li>
+<li><a href="#can-limpa-be-used-to-analyse-differential-isoform-usage" id="toc-can-limpa-be-used-to-analyse-differential-isoform-usage"><span class="toc-section-number">3</span> Can limpa be used to analyse differential isoform usage?</a></li>
+<li><a href="#is-limpa-equivalent-to-imputation" id="toc-is-limpa-equivalent-to-imputation"><span class="toc-section-number">4</span> Is limpa equivalent to imputation?</a></li>
+<li><a href="#can-i-reproduce-limpas-de-analysis-using-the-matrix-of-protein-quantifications" id="toc-can-i-reproduce-limpas-de-analysis-using-the-matrix-of-protein-quantifications"><span class="toc-section-number">5</span> Can I reproduce limpa’s DE analysis using the matrix of protein quantifications?</a></li>
+<li><a href="#can-i-use-the-matrix-of-protein-quantifications-for-plots-or-clustering-or-other-analyses" id="toc-can-i-use-the-matrix-of-protein-quantifications-for-plots-or-clustering-or-other-analyses"><span class="toc-section-number">6</span> Can I use the matrix of protein quantifications for plots or clustering or other analyses?</a></li>
+<li><a href="#limpa-produces-results-even-for-proteins-that-are-completed-undetected-in-a-group.-how-is-that-possible" id="toc-limpa-produces-results-even-for-proteins-that-are-completed-undetected-in-a-group.-how-is-that-possible"><span class="toc-section-number">7</span> limpa produces results even for proteins that are completed undetected in a group. How is that possible?</a></li>
+<li><a href="#limpa-sometimes-quantifies-the-same-protein-to-identical-values-in-different-samples.-why-does-limpa-do-that-and-does-it-cause-a-problem-for-downstream-analyses" id="toc-limpa-sometimes-quantifies-the-same-protein-to-identical-values-in-different-samples.-why-does-limpa-do-that-and-does-it-cause-a-problem-for-downstream-analyses"><span class="toc-section-number">8</span> limpa sometimes quantifies the same protein to identical values in different samples. Why does limpa do that and does it cause a problem for downstream analyses?</a></li>
+<li><a href="#how-much-memory-and-time-does-limpa-usage" id="toc-how-much-memory-and-time-does-limpa-usage"><span class="toc-section-number">9</span> How much memory and time does limpa usage?</a></li>
+<li><a href="#does-limpa-assume-that-missing-values-are-mar-or-mnar-or-both" id="toc-does-limpa-assume-that-missing-values-are-mar-or-mnar-or-both"><span class="toc-section-number">10</span> Does limpa assume that missing values are MAR or MNAR or both?</a></li>
+<li><a href="#more-documentation" id="toc-more-documentation"><span class="toc-section-number">11</span> More documentation</a></li>
+</ul>
+</div>
 
-<div id="can-limpa-be-used-for-phosphoproteomics-or-to-analyse-other-post-translational-modifications-ptms" class="section level2" number="1">
-<h2><span class="header-section-number">1</span> Can limpa be used for phosphoproteomics or to analyse other post-translational modifications (PTMs)?</h2>
+<div id="the-dpc-plot-doesnt-look-like-a-good-fit.-can-i-still-go-ahead-with-the-analysis" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> The DPC plot doesn’t look like a good fit. Can I still go ahead with the analysis?</h2>
+<p>It is actually very hard to estimate the DPC from observed data, because the curve is function of unobserved intensities rather than a function of the observed intensities. Datasets with outlier samples or a high proportion of DE peptides make it especially hard to estimate the curve.</p>
+<p>We suggest dpcCN() instead of dpc() with noisy data, because it is more robust to outlier samples. It will give quite a different looking plot than dpc() because it plots the curve vs estimated intensities instead of observed intensities. The DPC slope should generally be in the range of 0.1–1.0. We think that it depends on the technology and quantification software settings but doesn’t varies much from dataset to dataset for the same technology. A range of 0.7-0.9 is generally appropriate for DIA-NN data with match-between-runs. If dpcCN() doesn’t give a value in that range, it would be reasonable to run dpcQuant() with a preset value dpc.slope=0.7.</p>
+<p>The visual fit does not need to be good for the analysis to remain valid.
+The limpa analysis is not fragile and will continue to give reasonable results even if the DPC slope is somewhat misspecified.
+If dpcQuant() is run with a DPC slope that is lower than the true value, then the analysis will become more conservative but it won’t fall over, and it will remain more powerful than simply ignoring the missing values.</p>
+</div>
+<div id="can-limpa-be-used-for-phosphoproteomics-or-to-analyse-other-post-translational-modifications-ptms" class="section level2" number="2">
+<h2><span class="header-section-number">2</span> Can limpa be used for phosphoproteomics or to analyse other post-translational modifications (PTMs)?</h2>
 <p>Yes, limpa can operate on a matrix of log-intensities where each row corresponds to a protein modification and each column is a sample. For PTM analysis, each row is a unique feature to be retained for downstream analysis, so one runs dpcQuantByRow() instead of dpcQuant(). Otherwise, the limpa pipeline remains much the same.</p>
 </div>
-<div id="can-limpa-be-used-to-analyse-differential-isoform-usage" class="section level2" number="2">
-<h2><span class="header-section-number">2</span> Can limpa be used to analyse differential isoform usage?</h2>
+<div id="can-limpa-be-used-to-analyse-differential-isoform-usage" class="section level2" number="3">
+<h2><span class="header-section-number">3</span> Can limpa be used to analyse differential isoform usage?</h2>
 <p>limpa can be used in conjunction with limma’s diffSplice() function to detect changes in the relative expression of different peptides for the same protein (differential peptide usage).
 An example analysis is shown here: <a href="https://smythlab.github.io/limpa/DiffPeptideUsage.html" class="uri">https://smythlab.github.io/limpa/DiffPeptideUsage.html</a></p>
 </div>
-<div id="does-limpa-do-imputation" class="section level2" number="3">
-<h2><span class="header-section-number">3</span> Does limpa do imputation?</h2>
+<div id="is-limpa-equivalent-to-imputation" class="section level2" number="4">
+<h2><span class="header-section-number">4</span> Is limpa equivalent to imputation?</h2>
 <p>No, the main limpa pipeline is not a type of imputation. limpa produces a complete log-intensity matrix without NAs, but it does so by estimating protein expression parameters (log2-intensities) rather than by imputation. limpa does not treat the estimated expression parameters as if they were regular observations.</p>
 <p>limpa avoids several problems that are endemic to imputation methods. First, it doesn’t increase the error rate by over-stating the amount of information available in the observations. Second, it evaluates DE for each protein based on the data (the observed intensities and the pattern of missing values) for that particular protein. It does not infer that a protein might be up or down regulated simply because other proteins in the same dataset are up or down regulated (as is done by imputation methods based on MAR models, see <a href="https://smythlab.github.io/limpa/HYE100-Unbalanced.html" class="uri">https://smythlab.github.io/limpa/HYE100-Unbalanced.html</a>). Third, it does not insert random numbers, so results are completely reproducible and do not depend on an arbitrary random seed.</p>
 <p>The limpa package does include a novel imputation function, however, called <code>imputeByExpTilt()</code>, which is used to get starting values when estimating the limpa model hyperparameters.</p>
 </div>
-<div id="can-i-reproduce-limpas-de-analysis-using-the-matrix-of-protein-quantifications" class="section level2" number="4">
-<h2><span class="header-section-number">4</span> Can I reproduce limpa’s DE analysis using the matrix of protein quantifications?</h2>
+<div id="can-i-reproduce-limpas-de-analysis-using-the-matrix-of-protein-quantifications" class="section level2" number="5">
+<h2><span class="header-section-number">5</span> Can I reproduce limpa’s DE analysis using the matrix of protein quantifications?</h2>
 <p>No, limpa’s DE analysis cannot be reproduced using just the matrix of the protein quantifications.
 limpa also uses the standard errors and the observations count associated with each protein quant to model the variances and to do an optimally weighted linear model analysis. You can’t get the same benefit by simply exporting the matrix of protein quantification to an ordinary limma analysis, say.</p>
 </div>
-<div id="can-i-use-the-matrix-of-protein-quantifications-for-plots-or-clustering-or-other-analyses" class="section level2" number="5">
-<h2><span class="header-section-number">5</span> Can I use the matrix of protein quantifications for plots or clustering or other analyses?</h2>
+<div id="can-i-use-the-matrix-of-protein-quantifications-for-plots-or-clustering-or-other-analyses" class="section level2" number="6">
+<h2><span class="header-section-number">6</span> Can I use the matrix of protein quantifications for plots or clustering or other analyses?</h2>
 <p>limpa produces protein quantifications and also undertakes a specialized DE analysis. The DE analysis cannot be reproduced using the protein quantifications alone, but the protein quantifications are nevertheless intended for summary plotting purposes and for export to other downstream analyses that require complete data, like clustering or heatmaps or network analysis. The limma protein quants are intended to replace maxLFQ and are intended to make imputation unnecessary. Using the limpa protein quants without the standard errors is not optimal but, even so, we think the limpa quants are nevertheless a better export product than other options.</p>
 <p>The situation is similar for other specialized DE software tools for both RNA-seq and mass spec. In the RNA-seq world, limma-voom, edgeR and DESeq2 all produce expression summaries for each gene in each sample, but one cannot reproduce their DE analyses using the expression summaries. In each case, the expression summaries are used for graphical and export purposes. In each case, the expression summaries are complete and include non-NA values even for genes that are entirely undetected in a sample or a group.</p>
 <p>In the mass spectrometry world, limpa, MSqRob and MSstats all produce protein quantifications from the precursor or fragment data but, in each case, the DE analysis done by those tools cannot be reproduced using the protein quants alone. (The quants from MSqRob and MSstats will contain some NAs though unless used in conjunction with imputation.)</p>
 </div>
-<div id="limpa-produces-results-even-for-proteins-that-are-completed-undetected-in-a-group.-how-is-that-possible" class="section level2" number="6">
-<h2><span class="header-section-number">6</span> limpa produces results even for proteins that are completed undetected in a group. How is that possible?</h2>
+<div id="limpa-produces-results-even-for-proteins-that-are-completed-undetected-in-a-group.-how-is-that-possible" class="section level2" number="7">
+<h2><span class="header-section-number">7</span> limpa produces results even for proteins that are completed undetected in a group. How is that possible?</h2>
 <p>It is important for limpa to produce results even for proteins that are entirely missing in a group. The fact that a protein is entirely undetected in an experimental condition is the strongest possible evidence that the protein is down-regulated in that group. Non detection does not mean that the protein is necessarily absent, but does provide very strong evidence that the expression level is low. Putting protein quants for non-detected proteins to NA would make it impossible to detect DE for those proteins that actually have the largest logFCs.</p>
 <p>limpa produces large standard errors for proteins that are completely missing. limpa will generate significant DE when a protein is missing in one group but highly expressed in another. The results will not be significant however if the protein is missing in one group and lowly expressed in the other, where high and low expression is defined relative to the DPC. This seems to us to be correct behavior.</p>
 </div>
-<div id="limpa-sometimes-quantifies-the-same-protein-to-identical-values-in-different-samples.-why-does-limpa-do-that-and-does-it-cause-a-problem-for-downstream-analyses" class="section level2" number="7">
-<h2><span class="header-section-number">7</span> limpa sometimes quantifies the same protein to identical values in different samples. Why does limpa do that and does it cause a problem for downstream analyses?</h2>
+<div id="limpa-sometimes-quantifies-the-same-protein-to-identical-values-in-different-samples.-why-does-limpa-do-that-and-does-it-cause-a-problem-for-downstream-analyses" class="section level2" number="8">
+<h2><span class="header-section-number">8</span> limpa sometimes quantifies the same protein to identical values in different samples. Why does limpa do that and does it cause a problem for downstream analyses?</h2>
 <p>If a protein is entirely missing in several samples (i.e., all the precursors for that protein are missing in those samples), then it will be quantified by dpcQuant() to exactly the same value for all of those samples.
 This is because identical input should produce identical output.
 There is no evidence in the data for making one value larger or smaller than another, so they are all the same.
@@ -749,14 +773,15 @@ Protein quants based on entirely missing values get large standard errors and ar
 Second, dpcDE() keeps track of which protein quants are based on entirely missing values (n.observations==0) and ensures that these values, if they cluster in a group, are not used to compute residual standard deviations used by limma in the linear model fitting.
 This ensures that the repeated values for a particular protein do not bias the variance estimation or the DE analysis.</p>
 </div>
-<div id="how-fast-is-limpa" class="section level2" number="8">
-<h2><span class="header-section-number">8</span> How fast is limpa?</h2>
-<p>limpa analyses can be run on a laptop, even for 100s or 1000s of samples.
-With 100s of samples, the dpcQuant() step may take an hour or two on a laptop, but other steps are quite fast.</p>
-<p>With 1000s of samples, we recommend an alternative pipeline using impByExpTilt().</p>
+<div id="how-much-memory-and-time-does-limpa-usage" class="section level2" number="9">
+<h2><span class="header-section-number">9</span> How much memory and time does limpa usage?</h2>
+<p>limpa has very modest memory usage, and limpa analyses can be run on a laptop, even for 100s or 1000s of samples.
+For example, the DIA-NN case study <a href="https://smythlab.github.io/limpa/HYE100-DIANN.html" class="uri">https://smythlab.github.io/limpa/HYE100-DIANN.html</a> takes less than 15 seconds from start to finish and has a peak memory usage of less than 60MB on a Windows 11 laptop.</p>
+<p>With 100s of samples, the dpcQuant() step may take an hour or two on a laptop, but other steps remain quite fast.
+With 1000s of samples, we recommend an alternative pipeline using impByExpTilt().</p>
 </div>
-<div id="does-limpa-assume-that-missing-values-are-mar-or-mnar-or-both" class="section level2" number="9">
-<h2><span class="header-section-number">9</span> Does limpa assume that missing values are MAR or MNAR or both?</h2>
+<div id="does-limpa-assume-that-missing-values-are-mar-or-mnar-or-both" class="section level2" number="10">
+<h2><span class="header-section-number">10</span> Does limpa assume that missing values are MAR or MNAR or both?</h2>
 <p>limpa assumes that all missing values are MNAR, for the reasons given in Li &amp; Smyth (2023). The graduated probabilities given by the DPC mean that there no need to make any false dichotomies about types of missing values.</p>
 <p>It is important to note though that the common usage of the terms MAR, MCAR and MNAR in the proteomics literature does not agree with the original definitions of these terms in the statistics literature.
 In statistics, MCAR means that all missing values occur independently with the same probability.
@@ -764,9 +789,9 @@ MAR means that one can put the missing values into known groups and the missing 
 For example, missing values would be MAR if the probability of missingness differed between peptides, but missing values were MCAR for each peptide.</p>
 <p>In statistics, the missing values are MNAR if there is any dependence, no matter how slight, on the underlying intensity.
 Any intensity dependence translates to MNAR.
-In the proteomics literature, however, it seems to use that “MAR” is used whenever there is any random component at all in the missingness, i.e., if missingness is not deterministic, and “MNAR” seems to be used only for censoring situations.
+In the proteomics literature, however, it seems to use that “MAR” is used whenever there is any random component at all in the missingness, i.e., if missingness is not deterministic, and “MNAR” seems to be used mainly to refer to left-censoring situations.
 The statistical definitions are important because they correspond to ignorability, whereas the proteomics usages do not.
-The statistics, MAR or MCAR imply that the missing values can be ignored, whereas ignorability seems to have been not well understood in proteomics.</p>
+The statistics, MAR or MCAR imply that the missing values can be ignored, whereas ignorability seems to have been not well understood in the proteomics literature.</p>
 <p>Another confusion is that, in statistics, the terms MAR, MCAR, and MNAR do not correspond to physical mechanisms but only to probability distributions.
 For example, if there are both intensity dependent and random physical mechanisms at play, but you don’t know for sure which mechanism caused which missing value then, in statistical terminology, the missing values are all MNAR, because the same unconditional probability distribution (the DPC) applies to all the values.
 The existence of a random but unpredictable missing value mechanism will tend to flatten the trend in the DPC but will not remove it.</p>
@@ -774,6 +799,10 @@ The existence of a random but unpredictable missing value mechanism will tend to
 <p>In statistics, MAR does not mean that the missing values should be imputed by an imputation algorithm based on a MAR model. It rather means that there is no need for imputation at all. The missing values can just be ignored.</p>
 <p>The limpa function <code>fitZTLogit()</code> allows one to check whether there are any missing value mechanisms at play that are not intensity dependent, the presence of which would change the asymptotic limit of the DPC.
 So far, we have not found good evidence for non-intensity dependent missing value mechanisms, although more checking will be done as we get more experience with single-cell proteomics.</p>
+</div>
+<div id="more-documentation" class="section level2" number="11">
+<h2><span class="header-section-number">11</span> More documentation</h2>
+<p>More documentation and example analyses are available from <a href="https://github.com/SmythLab/limpa/" class="uri">https://github.com/SmythLab/limpa/</a>.</p>
 </div>
 
 
