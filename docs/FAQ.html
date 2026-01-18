@@ -700,7 +700,7 @@ function toggle_visibility(id1) {
 
 
 <h1 class="title toc-ignore">limpa: frequently asked questions</h1>
-<h4 class="date">First version 9 January 2026, Last revised 17 January 2026</h4>
+<h4 class="date">First version 9 January 2026, Last revised 18 January 2026</h4>
 
 </div>
 
@@ -732,6 +732,8 @@ If dpcQuant() is run with a DPC slope that is lower than the true value, then th
 <div id="can-limpa-be-used-for-phosphoproteomics-or-to-analyse-other-post-translational-modifications-ptms" class="section level2" number="2">
 <h2><span class="header-section-number">2</span> Can limpa be used for phosphoproteomics or to analyse other post-translational modifications (PTMs)?</h2>
 <p>Yes, limpa can operate on a matrix of log-intensities where each row corresponds to a protein modification and each column is a sample. For PTM analysis, each row is a unique feature to be retained for downstream analysis, so one runs dpcQuantByRow() instead of dpcQuant(). Otherwise, the limpa pipeline remains much the same.</p>
+<p>Note that limpa is not designed to analyse input-normalized PTM site quantities or PTM stoichiometry proportions from Spectronaut v20.
+Quantities input to limpa should be feature intensities rather than ratios of intensities.</p>
 </div>
 <div id="can-limpa-be-used-to-analyse-differential-isoform-usage" class="section level2" number="3">
 <h2><span class="header-section-number">3</span> Can limpa be used to analyse differential isoform usage?</h2>
