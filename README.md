@@ -11,6 +11,7 @@ The following vignettes and example analyses using limpa are available:
 * [Example analysis with Spectronaut output](https://smythlab.github.io/limpa/HYE100-Spectronaut.html)
 * [Why limpa is better than imputation: an example where imputation methods fail completely](https://smythlab.github.io/limpa/HYE100-Unbalanced.html)
 * [Detecting differential peptide usage](https://smythlab.github.io/limpa/DiffPeptideUsage.html)
+* [Large-scale analysis of clear cell renal carcinomis](https://smythlab.github.io/limpa/ccRCC.html)
 * [Frequently asked questions](https://smythlab.github.io/limpa/FAQ.html)
 * [limpa Refence Manual (pdf)](https://bioconductor.org/packages/release/bioc/manuals/limpa/man/limpa.pdf)
 
