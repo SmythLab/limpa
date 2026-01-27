@@ -700,7 +700,7 @@ function toggle_visibility(id1) {
 
 
 <h1 class="title toc-ignore">limpa: frequently asked questions</h1>
-<h4 class="date">First version 9 January 2026, Last revised 18 January 2026</h4>
+<h4 class="date">First version 9 January 2026, Last revised 28 January 2026</h4>
 
 </div>
 
@@ -717,7 +717,8 @@ function toggle_visibility(id1) {
 <li><a href="#limpa-sometimes-quantifies-the-same-protein-to-identical-values-in-different-samples.-why-does-limpa-do-that-and-does-it-cause-a-problem-for-downstream-analyses" id="toc-limpa-sometimes-quantifies-the-same-protein-to-identical-values-in-different-samples.-why-does-limpa-do-that-and-does-it-cause-a-problem-for-downstream-analyses"><span class="toc-section-number">8</span> limpa sometimes quantifies the same protein to identical values in different samples. Why does limpa do that and does it cause a problem for downstream analyses?</a></li>
 <li><a href="#how-much-memory-and-time-does-limpa-usage" id="toc-how-much-memory-and-time-does-limpa-usage"><span class="toc-section-number">9</span> How much memory and time does limpa usage?</a></li>
 <li><a href="#does-limpa-assume-that-missing-values-are-mar-or-mnar-or-both" id="toc-does-limpa-assume-that-missing-values-are-mar-or-mnar-or-both"><span class="toc-section-number">10</span> Does limpa assume that missing values are MAR or MNAR or both?</a></li>
-<li><a href="#more-documentation" id="toc-more-documentation"><span class="toc-section-number">11</span> More documentation</a></li>
+<li><a href="#is-limpa-compatible-with-limma-which-limma-functions-can-be-used-with-limpa" id="toc-is-limpa-compatible-with-limma-which-limma-functions-can-be-used-with-limpa"><span class="toc-section-number">11</span> Is limpa compatible with limma? Which limma functions can be used with limpa?</a></li>
+<li><a href="#more-documentation" id="toc-more-documentation"><span class="toc-section-number">12</span> More documentation</a></li>
 </ul>
 </div>
 
@@ -800,11 +801,20 @@ For example, if there are both intensity dependent and random physical mechanism
 The existence of a random but unpredictable missing value mechanism will tend to flatten the trend in the DPC but will not remove it.</p>
 <p>In statistics, one cannot put the missing values into distinct classes (MAR vs MNAR) by examining the pattern of missing of values for each peptide, because missing values will always be randomly distributed between samples if the peptide is non-DE, even if the missing values are MNAR.</p>
 <p>In statistics, MAR does not mean that the missing values should be imputed by an imputation algorithm based on a MAR model. It rather means that there is no need for imputation at all. The missing values can just be ignored.</p>
-<p>The limpa function <code>fitZTLogit()</code> allows one to check whether there are any missing value mechanisms at play that are not intensity dependent, the presence of which would change the asymptotic limit of the DPC.
+<p>The limpa function fitZTLogit() allows one to check whether there are any missing value mechanisms at play that are not intensity dependent, the presence of which would change the asymptotic limit of the DPC.
 So far, we have not found good evidence for non-intensity dependent missing value mechanisms, although more checking will be done as we get more experience with single-cell proteomics.</p>
 </div>
-<div id="more-documentation" class="section level2" number="11">
-<h2><span class="header-section-number">11</span> More documentation</h2>
+<div id="is-limpa-compatible-with-limma-which-limma-functions-can-be-used-with-limpa" class="section level2" number="11">
+<h2><span class="header-section-number">11</span> Is limpa compatible with limma? Which limma functions can be used with limpa?</h2>
+<p>dpcQuant() produces an EList object, but with extra components storing standard errors and observation counts that are not part of the standard limma pipeline.
+limma functions that fit linear models (such as lmFit, arrayWeights, or vooma) should not be used on the limpa object because they will not recognize or use the standard errors and observation counts.
+limma’s plotMDS function is also replaced in limpa by plotMDSUsingSEs.</p>
+<p>After running limpa’s dpcDE function, the resulting fitted model object is compatible with downstream limma functions.
+Any limma functions that work on fitted model objects can then be used on the dpcDE output, including contrasts.fit, eBayes, topTable, treat, decideTests, plotMD, diffSplice, goana, kegga, fitted and residuals.</p>
+<p>In summary, output from dpcQuant() or dpcQuantByRows() is not compatible with limma functions, but output from dpcDE() is.</p>
+</div>
+<div id="more-documentation" class="section level2" number="12">
+<h2><span class="header-section-number">12</span> More documentation</h2>
 <p>More documentation and example analyses are available from <a href="https://github.com/SmythLab/limpa/" class="uri">https://github.com/SmythLab/limpa/</a>.</p>
 </div>
 
