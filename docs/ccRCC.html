@@ -483,18 +483,18 @@ font-style: normal;
 line-height: normal;
 }
 
-code > span.kw { color: #E07020; } 
-code > span.dt { color: #404040; } 
-code > span.dv { color: #D02070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #D02070; } 
-code > span.ch { color: #40A040; } 
-code > span.st { color: #40A040; } 
-code > span.co { color: #808080; font-style: italic; } 
-code > span.ot { color: #2020F0; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #E07020; } 
-code > span.er { color: #FF0000; } 
+code > span.kw { color: #E07020; }
+code > span.dt { color: #404040; }
+code > span.dv { color: #D02070; }
+code > span.bn { color: #d14; }
+code > span.fl { color: #D02070; }
+code > span.ch { color: #40A040; }
+code > span.st { color: #40A040; }
+code > span.co { color: #808080; font-style: italic; }
+code > span.ot { color: #2020F0; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #E07020; }
+code > span.er { color: #FF0000; }
 code > span.identifier { color: #404040; }
 code > span.number { color: #D02070; }
 code > span.string { color: #40A040; }
@@ -772,7 +772,7 @@ Note that <code>row.names(x)</code> gives the precursor IDs and <code>colnames(x
 <p>There are 103 tumor samples and 84 normal adjacent tissue samples:</p>
 <pre class="r"><code>&gt; table(Tissue)</code></pre>
 <pre><code>Tissue
-  N   T 
+  N   T
  84 103 </code></pre>
 <p>A closer look using <code>table(Tissue,Case)</code> shows that there are 81 cases with matched tumor and normal adjacent tissue samples from the same case, while 22 cases have tumor only and 3 cases have normal tissue only.</p>
 <p>For convenient and brevity, we reset the sample names to consist just of the case and tissue:</p>
@@ -1035,7 +1035,7 @@ P60602    ROMO1         2   0.612  0.593    17.9  5.81 7.20e-08  8.21e-05  7.82
 Q9H5V8    CDCP1         5   0.133  0.947    15.7  5.75 9.59e-08  9.57e-05  7.43
 O60443    GSDME        27   0.510  0.620    17.3  5.70 1.19e-07  1.06e-04  7.39
 Q15599 SLC9A3R2        24   0.653 -0.539    17.2 -5.62 1.70e-07  1.15e-04  7.05</code></pre>
-<p>Gender genes show up-regulation of Y chromosome genes like DDX3Y AND RPS4Y1 and down-regulated of female-biased genes like PZP (pregnancy zone protein).</p>
+<p>Gender genes show up-regulation of Y chromosome genes like DDX3Y AND RPS4Y1 and down-regulation of female-biased genes like PZP (pregnancy zone protein).</p>
 <pre class="r"><code>&gt; topTable(fitt, coef=&quot;GenderM&quot;)</code></pre>
 <pre><code>         Genes NPeptides PropObs  logFC AveExpr     t  P.Value adj.P.Val     B
 O15523   DDX3Y         6   0.352  2.140    15.9 11.55 3.55e-20  2.83e-16 31.02
@@ -1152,7 +1152,7 @@ $(document).ready(function () {
 
 <script type="text/javascript">
 $(document).ready(function ()  {
-  
+
   // Map "enter" keypress to the same action as a cursor click
   function navigateLink(e) {
     if (e.key === "Enter") {
