@@ -13,7 +13,7 @@ The following vignettes and example analyses using limpa are available:
 * [Detecting differential peptide usage](https://smythlab.github.io/limpa/DiffPeptideUsage.html)
 * [Large-scale analysis of clear cell renal carcinomas](https://smythlab.github.io/limpa/ccRCC.html)
 * [Frequently asked questions](https://smythlab.github.io/limpa/FAQ.html)
-* [limpa Refence Manual (pdf)](https://bioconductor.org/packages/release/bioc/manuals/limpa/man/limpa.pdf)
+* [limpa Reference Manual (pdf)](https://bioconductor.org/packages/release/bioc/manuals/limpa/man/limpa.pdf)
 
 **References**
 
