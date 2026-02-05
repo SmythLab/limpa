@@ -483,18 +483,18 @@ font-style: normal;
 line-height: normal;
 }
 
-code > span.kw { color: #E07020; } 
-code > span.dt { color: #404040; } 
-code > span.dv { color: #D02070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #D02070; } 
-code > span.ch { color: #40A040; } 
-code > span.st { color: #40A040; } 
-code > span.co { color: #808080; font-style: italic; } 
-code > span.ot { color: #2020F0; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #E07020; } 
-code > span.er { color: #FF0000; } 
+code > span.kw { color: #E07020; }
+code > span.dt { color: #404040; }
+code > span.dv { color: #D02070; }
+code > span.bn { color: #d14; }
+code > span.fl { color: #D02070; }
+code > span.ch { color: #40A040; }
+code > span.st { color: #40A040; }
+code > span.co { color: #808080; font-style: italic; }
+code > span.ot { color: #2020F0; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #E07020; }
+code > span.er { color: #FF0000; }
 code > span.identifier { color: #404040; }
 code > span.number { color: #D02070; }
 code > span.string { color: #40A040; }
@@ -752,7 +752,7 @@ Normally, we would use <code>readSpectronaut()</code> to read a standard Spectro
 &gt; y.prec$genes$Species &lt;- substring(PG,n-4L,n)
 &gt; table(y.prec$genes$Species)</code></pre>
 <pre><code>
-ECOLI HUMAN YEAS8 
+ECOLI HUMAN YEAS8
 11846 16681 12300 </code></pre>
 <p>The detection probability slope is estimated to be about 0.7.
 Here we estimate DPC from the complete-normal model using <code>dpcCN</code> because it is robust to very large fold-changes in the data.</p>
@@ -841,11 +841,11 @@ DE      0    1    2    3    4    5
 <p>We can confirm that these significant proteins are correct discoveries:</p>
 <pre class="r"><code>&gt; table(fit$genes$Species[dt==  1 &amp; NObs.A==0])</code></pre>
 <pre><code>
-ECOLI 
+ECOLI
   331 </code></pre>
 <pre class="r"><code>&gt; table(fit$genes$Species[dt== -1 &amp; NObs.B==0])</code></pre>
 <pre><code>
-HUMAN YEAS8 
+HUMAN YEAS8
     1   485 </code></pre>
 <p>We see the 331 up proteins are 100% correct discoveries and the 486 down proteins contain just one false discovery.</p>
 <p>As as example, we pick out most significant of the latter proteins:</p>
@@ -887,14 +887,14 @@ while the E. coli proteins are lower in A samples:</p>
 <pre class="r"><code>&gt; NMissing.A &lt;- rowSums(is.na(y.prec$E[,Group==&quot;A&quot;]))
 &gt; NMissing.B &lt;- rowSums(is.na(y.prec$E[,Group==&quot;B&quot;]))
 &gt; table(NMissing.A, y.prec$genes$Species)</code></pre>
-<pre><code>          
+<pre><code>
 NMissing.A ECOLI HUMAN YEAS8
          0  2317 14943  9429
          1   821   762  1445
          2  1582   622  1313
          3  7126   354   113</code></pre>
 <pre class="r"><code>&gt; table(NMissing.B, y.prec$genes$Species)</code></pre>
-<pre><code>          
+<pre><code>
 NMissing.B ECOLI HUMAN YEAS8
          0  9575 14951  1509
          1  1173   823   659
@@ -918,7 +918,7 @@ The fact that human albumin appears DE is an artefact of the dataset rather than
 </div>
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
-<p>Thanks to Julie Marchingo for suggesting a fix for reading the Spectronaut file.</p>
+<p>Thanks to Julia Marchingo for suggesting a fix for reading the Spectronaut file.</p>
 </div>
 <div id="further-reading" class="section level1">
 <h1>Further reading</h1>
@@ -1000,7 +1000,7 @@ $(document).ready(function () {
 
 <script type="text/javascript">
 $(document).ready(function ()  {
-  
+
   // Map "enter" keypress to the same action as a cursor click
   function navigateLink(e) {
     if (e.key === "Enter") {
