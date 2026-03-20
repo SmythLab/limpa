@@ -1,4 +1,4 @@
-limpa is now available as part of Bioconductor, see: https://bioconductor.org/packages/limpa.
+limpa is available as part of Bioconductor, see: https://bioconductor.org/packages/limpa.
 Please install limpa from Bioconductor, which always has the latest official version.
 
 Questions about limpa can be sent to the Bioconductor support forum at https://support.bioconductor.org.
