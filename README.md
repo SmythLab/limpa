@@ -17,8 +17,17 @@ The following vignettes and example analyses using limpa are available:
 
 **References**
 
-Li M, Cobbold SA, Smyth GK (2025). Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values. *bioRxiv*
-[doi:10.1101/2025.04.28.651125](https://doi.org/10.1101/2025.04.28.651125).
+Li M, Cobbold SA, Smyth GK (2025). Quantification and differential analysis of mass spectrometry proteomics data with probabilistic recovery of information from missing values.
+*bioRxiv* [doi:10.1101/2025.04.28.651125](https://doi.org/10.1101/2025.04.28.651125).
 
-Li M, Smyth GK (2023). Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics. *Bioinformatics* 39(5), btad200.
-[doi:10.1093/bioinformatics/btad200](https://doi.org/10.1093/bioinformatics/btad200)
+Li M, Smyth GK (2023). Neither random nor censored: estimating intensity-dependent probabilities for missing values in label-free proteomics.
+*Bioinformatics* 39(5), btad200.
+[doi:10.1093/bioinformatics/btad200](https://doi.org/10.1093/bioinformatics/btad200).
+
+Huang AS\#, Lieschke E\#, Baldoni PL\#, Thomas AF, Marchingo JM, Whelan L, Khuu G, La Marca E, Milevskiy M, Ross A, Johanson T, Potts M, Gibson L, Vaibhav V, Dagley L, Balihodcik A, Dengler M, Liu Z, Li K, Smyth GK\*, Kelly G\*, Strasser A\* (2026).
+Pre-existing levels of pro-survival proteins and induction of BCL-XL dictate cell fate after p53 activation.
+*bioRxiv* <https://doi.org/10.64898/2026.07.01.735749>.
+
+Corso LD, River ISa, Al Halawani A, Gerak CAN, Gannon D, Ozaydin O, Li M, Thyagarajan K, Niezabitowski L, Chua NK, Tan W, Wudy SI, McLysaght A, Smyth GK, Shakeel S, Feltham R, Vervoort SJ (2026).
+INTS12 bridges Integrator and NELF to prevent the release of non-processive RNA polymerase II complexes.
+*bioRxiv* <https://doi.org/10.64898/2026.01.16.699819>.
